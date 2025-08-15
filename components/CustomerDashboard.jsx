@@ -76,26 +76,74 @@ const CustomerDashboard = () => {
     ? menu 
     : menu.filter(item => item.category === activeCategory);
 
+
+
   if (loading) {
     return (
-      <div className="dashboard-container">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Loading menu...</p>
+      <div className="dashboard-container" style={{ 
+        background: 'white',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <div className="loading-spinner" style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <div className="spinner" style={{
+            width: '50px',
+            height: '50px',
+            border: '5px solid #f3f3f3',
+            borderTop: '5px solid linear-gradient(90deg, #4f46e5, #9333ea)',
+            borderTopColor: '#4f46e5',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            background: 'conic-gradient(from 0deg, #4f46e5, #9333ea)',
+            WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 5px), #fff 0)',
+            mask: 'radial-gradient(farthest-side, transparent calc(100% - 5px), #fff 0)'
+          }}></div>
+          <p style={{
+            color: '#4f46e5',
+            fontSize: '1.2rem',
+            fontWeight: '500',
+            background: 'linear-gradient(90deg, #4f46e5, #9333ea)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent'
+          }}>Loading menu...</p>
+          
+          {/* Progress bar alternative */}
+          <div style={{
+            width: '200px',
+            height: '6px',
+            background: '#f3f3f3',
+            borderRadius: '3px',
+            overflow: 'hidden',
+            marginTop: '10px'
+          }}>
+            <div style={{
+              width: '60%',
+              height: '100%',
+              background: 'linear-gradient(90deg, #4f46e5, #9333ea)',
+              animation: 'progress 2s ease-in-out infinite',
+              borderRadius: '3px'
+            }}></div>
+          </div>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="dashboard-container">
-        <div className="error-message">
-          <svg className="error-icon" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z"/>
-          </svg>
-          <p>Error loading menu: {error}</p>
-        </div>
+        
+        <style jsx>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+          }
+        `}</style>
       </div>
     );
   }
