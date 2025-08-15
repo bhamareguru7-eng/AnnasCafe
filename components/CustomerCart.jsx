@@ -833,7 +833,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           <div className="table-input-container" onClick={(e) => e.stopPropagation()}>
             <h3 className="table-input-title">Enter Your Table Number</h3>
             <input
-              type="text"
+              type="number"
               className="table-input-field"
               placeholder="Table number"
               value={tableNo}
