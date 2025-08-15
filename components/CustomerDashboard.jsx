@@ -218,7 +218,7 @@ const CustomerDashboard = () => {
         }
         
         .search-bar {
-          width: 100%;
+          width: 50%;
           padding: 0.75rem 1rem;
           border-radius: 0.75rem;
           border: 1px solid #e2e8f0;
@@ -495,10 +495,20 @@ const CustomerDashboard = () => {
             min-width: auto;
           }
           
-          .search-container {
-            min-width: auto;
-            max-width: none;
-          }
+          .header-2 {
+                display: flex;
+                align-items: center;   /* vertically center them */
+                justify-content: flex-end; /* push them to the right if needed */
+                gap: 1rem;              /* space between cart and search bar */
+                }
+                .search-container {
+                flex: 1;                /* search bar takes remaining space */
+                max-width: 400px;
+                }
+                .cart-button {
+                flex-shrink: 0;         /* keep button from shrinking */
+}
+
           
           .main-content {
             margin-top: 180px; /* Increase space for mobile */
@@ -516,7 +526,7 @@ const CustomerDashboard = () => {
             </div>
             
            
-            
+            <div className="header-2">
             <button 
               className="cart-button"
               onClick={() => setIsCartOpen(true)}
@@ -541,6 +551,7 @@ const CustomerDashboard = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              </div>
             </div>
           </div>
         </header>
