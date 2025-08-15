@@ -162,16 +162,18 @@ const CustomerDashboard = () => {
           min-height: 100vh;
           background-color: #f8fafc;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          overflow:visible;
         }
         
         .header {
-          background-color: white;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          padding: 1.5rem;
-          position: sticky;
-          top: 0;
-          z-index: 50;
+                    position: sticky;
+                    top: 0;
+                    background-color: white;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    padding: 1.5rem;
+                    z-index: 1000; /* Keep it above all content */
         }
+
         
         .header-content {
           max-width: 1200px;
