@@ -208,6 +208,7 @@ const CustomerDashboard = () => {
           flex: 1;
           min-width: 250px;
           max-width: 400px;
+          margin-bottom:19px;
         }
         
         .search-bar {
@@ -477,15 +478,7 @@ const CustomerDashboard = () => {
               <p className="subtitle">Brews, Bites & Bliss</p>
             </div>
             
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-bar"
-                placeholder="Search menu items..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+            
             
             <button 
               className="cart-button"
@@ -507,6 +500,15 @@ const CustomerDashboard = () => {
         </header>
 
         <main className="main-content">
+        <div className="search-container">
+              <input
+                type="text"
+                className="search-bar"
+                placeholder="Search menu items..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           <div className="category-filter">
             {categories.map(category => (
               <button
