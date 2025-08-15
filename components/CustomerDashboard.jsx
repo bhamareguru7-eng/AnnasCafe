@@ -184,7 +184,7 @@ const CustomerDashboard = () => {
           max-width: 1200px;
           margin: 0 auto;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
           gap: 1rem;
           flex-wrap: wrap;
@@ -200,15 +200,18 @@ const CustomerDashboard = () => {
           font-weight: 700;
           color: #1e293b;
           margin-bottom: 0.25rem;
+          text-align:center;
           background: linear-gradient(90deg, #4f46e5, #9333ea);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+
         }
         
         .subtitle {
           color: #64748b;
           font-size: 0.875rem;
           font-weight: 500;
+          text-align:center;
         }
         
         .search-container {
@@ -218,7 +221,7 @@ const CustomerDashboard = () => {
         }
         
         .search-bar {
-          width: 50%;
+          width: 90%;
           padding: 0.75rem 1rem;
           border-radius: 0.75rem;
           border: 1px solid #e2e8f0;
@@ -289,7 +292,7 @@ const CustomerDashboard = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem 1.5rem;
-          margin-top: 120px; /* Add space for fixed header */
+          margin-top: 120px;
         }
         
         .category-filter {
@@ -297,7 +300,6 @@ const CustomerDashboard = () => {
           flex-wrap: wrap;
           gap: 0.75rem;
           margin-bottom: 1.5rem;
-          padding-top:30px;
         }
         
         .category-button {
@@ -508,11 +510,10 @@ const CustomerDashboard = () => {
                 .cart-button {
                 flex-shrink: 0;         /* keep button from shrinking */
 }
-
           
           .main-content {
-            margin-top: 180px; /* Increase space for mobile */
             padding: 1rem;
+            margin-top:36%;
           }
         }
       `}</style>
