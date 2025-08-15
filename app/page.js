@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 export default function Home(){
-  redirect("/login");
+  redirect("/customer");
 
   return <div>Welcome to dashboard</div>
 }
