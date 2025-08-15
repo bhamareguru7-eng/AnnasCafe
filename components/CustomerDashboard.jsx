@@ -255,6 +255,7 @@ const CustomerDashboard = () => {
           cursor: pointer;
           transition: all 0.3s ease;
           flex-shrink: 0;
+          width:30%;
         }
         
         .cart-button:hover {

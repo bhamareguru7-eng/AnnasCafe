@@ -85,6 +85,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           z-index: 1000;
           backdrop-filter: blur(4px);
           animation: fadeIn 0.3s ease-out;
+          padding: 1rem;
         }
         
         @keyframes fadeIn {
@@ -97,7 +98,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           border-radius: 1rem;
           box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           width: 100%;
-          max-width: 32rem;
+          max-width: 36rem;
           max-height: 90vh;
           overflow: hidden;
           animation: slideUp 0.3s ease-out;
@@ -133,6 +134,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           gap: 0.5rem;
         }
         
+        @media (max-width: 640px) {
+          .modal-title {
+            font-size: 1.125rem;
+          }
+        }
+        
         .close-button {
           color: #64748b;
           background: none;
@@ -143,6 +150,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           transition: all 0.2s;
           padding: 0.5rem;
           border-radius: 50%;
+          flex-shrink: 0;
         }
         
         .close-button:hover {
@@ -154,6 +162,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           padding: 1.5rem;
           max-height: 60vh;
           overflow-y: auto;
+        }
+        
+        @media (max-width: 640px) {
+          .modal-content {
+            padding: 1rem;
+          }
         }
         
         .empty-cart {
@@ -177,16 +191,15 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         .cart-items {
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1rem;
         }
         
         .cart-item {
-          display: flex;
-          justify-content: space-between;
-          padding: 1rem;
+          padding: 1.25rem;
           border-radius: 0.75rem;
           transition: all 0.2s;
           border: 1px solid #f1f5f9;
+          background-color: #fafbfc;
         }
         
         .cart-item:hover {
@@ -194,8 +207,17 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
+        .item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+          gap: 1rem;
+        }
+        
         .item-info {
           flex: 1;
+          min-width: 0;
         }
         
         .item-name {
@@ -203,6 +225,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           color: #1e293b;
           margin-bottom: 0.25rem;
           font-size: 1rem;
+          word-break: break-word;
         }
         
         .item-price {
@@ -211,10 +234,35 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           font-weight: 500;
         }
         
+        .remove-button {
+          color: #ef4444;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+          transition: all 0.2s;
+          flex-shrink: 0;
+          margin-left: 0.5rem;
+        }
+        
+        .remove-button:hover {
+          background-color: #fee2e2;
+        }
+        
         .item-controls {
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: 1.25rem;
+          gap: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+          .item-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+          }
         }
         
         .quantity-controls {
@@ -223,11 +271,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           border: 1px solid #e2e8f0;
           border-radius: 0.75rem;
           overflow: hidden;
+          background-color: white;
         }
         
         .quantity-button {
-          width: 2rem;
-          height: 2rem;
+          width: 2.5rem;
+          height: 2.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -237,6 +286,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           cursor: pointer;
           font-weight: 600;
           transition: all 0.2s;
+          font-size: 1.125rem;
         }
         
         .quantity-button:hover {
@@ -248,31 +298,30 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .quantity-display {
-          width: 2rem;
+          width: 3rem;
           text-align: center;
           font-weight: 600;
           color: #1e293b;
+          background-color: white;
+          padding: 0.625rem 0;
         }
         
         .item-total {
-          width: 5rem;
-          text-align: right;
           font-weight: 700;
           color: #4f46e5;
+          font-size: 1.125rem;
+          text-align: right;
+          min-width: fit-content;
         }
         
-        .remove-button {
-          color: #ef4444;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.5rem;
-          border-radius: 0.375rem;
-          transition: all 0.2s;
-        }
-        
-        .remove-button:hover {
-          background-color: #fee2e2;
+        @media (max-width: 640px) {
+          .item-total {
+            text-align: center;
+            padding: 0.5rem;
+            background-color: #f0f9ff;
+            border-radius: 0.5rem;
+            border: 1px solid #e0f2fe;
+          }
         }
         
         .checkout-section {
@@ -282,12 +331,32 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           margin-top: 2rem;
           padding-top: 1.5rem;
           border-top: 1px solid #e2e8f0;
+          gap: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+          .checkout-section {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.5rem;
+          }
         }
         
         .total-amount {
           font-size: 1.25rem;
           font-weight: 700;
           color: #1e293b;
+        }
+        
+        @media (max-width: 640px) {
+          .total-amount {
+            text-align: center;
+            font-size: 1.375rem;
+            padding: 0.75rem;
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+          }
         }
         
         .checkout-button {
@@ -301,8 +370,17 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 0.5rem;
           box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+          min-width: fit-content;
+        }
+        
+        @media (max-width: 640px) {
+          .checkout-button {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+          }
         }
         
         .checkout-button:hover {
@@ -336,6 +414,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           z-index: 1001;
           backdrop-filter: blur(4px);
           animation: fadeIn 0.3s ease-out;
+          padding: 1rem;
         }
 
         .confirmation-container {
@@ -348,6 +427,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           text-align: center;
           animation: slideUp 0.3s ease-out;
           border: 1px solid #e2e8f0;
+        }
+        
+        @media (max-width: 640px) {
+          .confirmation-container {
+            padding: 1.5rem;
+          }
         }
 
         .confirmation-icon {
@@ -363,6 +448,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           color: #1e293b;
           margin-bottom: 1rem;
         }
+        
+        @media (max-width: 640px) {
+          .confirmation-title {
+            font-size: 1.25rem;
+          }
+        }
 
         .confirmation-text {
           color: #64748b;
@@ -374,6 +465,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           display: flex;
           gap: 1rem;
           justify-content: center;
+        }
+        
+        @media (max-width: 640px) {
+          .confirmation-buttons {
+            flex-direction: column;
+          }
         }
 
         .confirm-button {
@@ -387,6 +484,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 0.5rem;
           box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
         }
@@ -436,6 +534,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           animation: slideUp 0.3s ease-out;
           border: 1px solid #e2e8f0;
         }
+        
+        @media (max-width: 640px) {
+          .receipt-container {
+            padding: 1.5rem;
+          }
+        }
 
         .receipt-icon {
           width: 4rem;
@@ -449,6 +553,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           font-weight: 700;
           color: #10b981;
           margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+          .receipt-title {
+            font-size: 1.25rem;
+          }
         }
 
         .receipt-text {
@@ -478,6 +588,9 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           transition: all 0.3s ease;
           margin-top: 1.5rem;
           box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
         }
 
         .receipt-button:hover {
@@ -497,13 +610,14 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: none;
+          background-color: rgba(0, 0, 0, 0.5);
           display: flex;
           justify-content: center;
           align-items: center;
           z-index: 1001;
           backdrop-filter: blur(4px);
           animation: fadeIn 0.3s ease-out;
+          padding: 1rem;
         }
 
         .table-input-container {
@@ -517,12 +631,24 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           animation: slideUp 0.3s ease-out;
           border: 1px solid #e2e8f0;
         }
+        
+        @media (max-width: 640px) {
+          .table-input-container {
+            padding: 1.5rem;
+          }
+        }
 
         .table-input-title {
           font-size: 1.5rem;
           font-weight: 700;
           color: #1e293b;
           margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 640px) {
+          .table-input-title {
+            font-size: 1.25rem;
+          }
         }
 
         .table-input-field {
@@ -533,8 +659,9 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           font-size: 1rem;
           margin-bottom: 1rem;
           transition: all 0.2s;
-          background-color:white;
+          background-color: white;
           color: #1e293b;
+          box-sizing: border-box;
         }
 
         .table-input-field:focus {
@@ -554,6 +681,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           display: flex;
           gap: 1rem;
           justify-content: center;
+        }
+        
+        @media (max-width: 640px) {
+          .table-input-buttons {
+            flex-direction: column;
+          }
         }
 
         .table-input-submit {
@@ -634,27 +767,11 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
                 <div className="cart-items">
                   {cartItems.map(item => (
                     <div key={item.id} className="cart-item">
-                      <div className="item-info">
-                        <h4 className="item-name">{item.name}</h4>
-                        <p className="item-price">₹{item.price} each</p>
-                      </div>
-                      <div className="item-controls">
-                        <div className="quantity-controls">
-                          <button
-                            className="quantity-button"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                          >
-                            -
-                          </button>
-                          <span className="quantity-display">{item.quantity}</span>
-                          <button
-                            className="quantity-button"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                          >
-                            +
-                          </button>
+                      <div className="item-header">
+                        <div className="item-info">
+                          <h4 className="item-name">{item.name}</h4>
+                          <p className="item-price">₹{item.price} each</p>
                         </div>
-                        <span className="item-total">₹{item.price * item.quantity}</span>
                         <button
                           className="remove-button"
                           onClick={() => onRemoveItem(item.id)}
@@ -666,6 +783,25 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
                             <line x1="14" y1="11" x2="14" y2="17"></line>
                           </svg>
                         </button>
+                      </div>
+                      
+                      <div className="item-controls">
+                        <div className="quantity-controls">
+                          <button
+                            className="quantity-button"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                          >
+                            −
+                          </button>
+                          <span className="quantity-display">{item.quantity}</span>
+                          <button
+                            className="quantity-button"
+                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="item-total">₹{item.price * item.quantity}</span>
                       </div>
                     </div>
                   ))}
@@ -779,7 +915,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
          
             <button className="receipt-button" onClick={handleCloseReceipt}>
               Got it!
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginLeft: '0.5rem'}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14"></path>
                 <path d="M12 5l7 7-7 7"></path>
               </svg>
