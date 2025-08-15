@@ -1,16 +1,42 @@
 "use client"
 
-import React, { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import React, { useEffect, useState } from 'react';
 
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose }) => {
-  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
   
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const handleCheckout = () => {
+  const handlePlaceOrder = () => {
     if (cartItems.length === 0) return;
-    alert(`Order placed successfully!\nPayment: ${paymentMethod}\nTotal: ₹${totalPrice}\n\nThank you for your order!`);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmOrder = async() => {
+    const {data,error} = await supabase
+    .from('orders')
+    .insert({iteminfo:JSON.stringify(cartItems)});
+
+    if(error){
+        console.log('Error occoured while inserting data');
+        return;
+    }
+    
+    setShowConfirmation(false);
+    setShowReceipt(true);
+  };
+
+  const handleCloseReceipt = () => {
+    setShowReceipt(false);
+    onClose();
+  };
+
+  const handleModalClose = () => {
+    setShowConfirmation(false);
+    setShowReceipt(false);
     onClose();
   };
 
@@ -174,55 +200,13 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           cursor: pointer;
         }
         
-        .payment-section {
-          margin-top: 1.5rem;
-          padding-top: 1.5rem;
-          border-top: 1px solid #e2e8f0;
-        }
-        
-        .payment-title {
-          font-weight: 600;
-          color: #1e293b;
-          margin-bottom: 1rem;
-        }
-        
-        .payment-options {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.5rem;
-          margin-bottom: 1.5rem;
-        }
-        
-        .payment-option {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          padding: 0.75rem;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.375rem;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .payment-option:hover {
-          border-color: #c7d2fe;
-        }
-        
-        .payment-option.active {
-          border-color: #4f46e5;
-          background-color: #eef2ff;
-        }
-        
-        .payment-icon {
-          font-size: 1rem;
-        }
-        
         .checkout-section {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e2e8f0;
         }
         
         .total-amount {
@@ -250,13 +234,143 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           background-color: #cbd5e1;
           cursor: not-allowed;
         }
+
+        /* Confirmation Modal Styles */
+        .confirmation-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 60;
+        }
+
+        .confirmation-container {
+          background-color: white;
+          border-radius: 0.5rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          width: 100%;
+          max-width: 24rem;
+          padding: 2rem;
+          text-align: center;
+          animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .confirmation-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+
+        .confirmation-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #1e293b;
+          margin-bottom: 1rem;
+        }
+
+        .confirmation-text {
+          color: #64748b;
+          margin-bottom: 2rem;
+        }
+
+        .confirmation-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        .confirm-button {
+          padding: 0.75rem 1.5rem;
+          background-color: #10b981;
+          color: white;
+          border: none;
+          border-radius: 0.375rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .confirm-button:hover {
+          background-color: #059669;
+        }
+
+        .cancel-button {
+          padding: 0.75rem 1.5rem;
+          background-color: #f1f5f9;
+          color: #64748b;
+          border: none;
+          border-radius: 0.375rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .cancel-button:hover {
+          background-color: #e2e8f0;
+        }
+
+        /* Receipt Modal Styles */
+        .receipt-container {
+          background-color: white;
+          border-radius: 0.5rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          width: 100%;
+          max-width: 24rem;
+          padding: 2rem;
+          text-align: center;
+          animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .receipt-icon {
+          font-size: 3rem;
+          color: #10b981;
+          margin-bottom: 1rem;
+        }
+
+        .receipt-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #10b981;
+          margin-bottom: 1rem;
+        }
+
+        .receipt-text {
+          color: #64748b;
+          margin-bottom: 1rem;
+          line-height: 1.5;
+        }
+
+        .receipt-highlight {
+          color: #dc2626;
+          font-weight: 600;
+        }
+
+        .receipt-button {
+          padding: 0.75rem 1.5rem;
+          background-color: #4f46e5;
+          color: white;
+          border: none;
+          border-radius: 0.375rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          margin-top: 1rem;
+        }
+
+        .receipt-button:hover {
+          background-color: #4338ca;
+        }
       `}</style>
 
-      <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-overlay" onClick={handleModalClose}>
         <div className="modal-container" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
             <h3 className="modal-title">Your Order ({totalItems} items)</h3>
-            <button className="close-button" onClick={onClose}>×</button>
+            <button className="close-button" onClick={handleModalClose}>×</button>
           </div>
 
           <div className="modal-content">
@@ -302,40 +416,60 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
                   ))}
                 </div>
 
-                <div className="payment-section">
-                  <h4 className="payment-title">Payment Method</h4>
-                  <div className="payment-options">
-                    <div
-                      className={`payment-option ${paymentMethod === 'cash' ? 'active' : ''}`}
-                      onClick={() => setPaymentMethod('cash')}
-                    >
-                      <span className="payment-icon">💵</span>
-                      <span>Cash</span>
-                    </div>
-                    <div
-                      className={`payment-option ${paymentMethod === 'card' ? 'active' : ''}`}
-                      onClick={() => setPaymentMethod('card')}
-                    >
-                      <span className="payment-icon">💳</span>
-                      <span>Card</span>
-                    </div>
-                  </div>
-
-                  <div className="checkout-section">
-                    <span className="total-amount">Total: ₹{totalPrice}</span>
-                    <button
-                      className="checkout-button"
-                      onClick={handleCheckout}
-                    >
-                      Place Order
-                    </button>
-                  </div>
+                <div className="checkout-section">
+                  <span className="total-amount">Total: ₹{totalPrice}</span>
+                  <button
+                    className="checkout-button"
+                    onClick={handlePlaceOrder}
+                  >
+                    Place Order
+                  </button>
                 </div>
               </>
             )}
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <div className="confirmation-modal">
+          <div className="confirmation-container">
+            <div className="confirmation-icon">❓</div>
+            <h3 className="confirmation-title">Confirm Order</h3>
+            <p className="confirmation-text">
+              Are you sure you want to place this order for ₹{totalPrice}?
+            </p>
+            <div className="confirmation-buttons">
+              <button className="confirm-button" onClick={handleConfirmOrder}>
+                Confirm
+              </button>
+              <button className="cancel-button" onClick={() => setShowConfirmation(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Receipt Modal */}
+      {showReceipt && (
+        <div className="confirmation-modal">
+          <div className="receipt-container">
+            <div className="receipt-icon">✅</div>
+            <h3 className="receipt-title">Order Placed Successfully!</h3>
+            <p className="receipt-text">
+              Please collect your receipt from the counter.
+            </p>
+            <p className="receipt-text">
+              <span className="receipt-highlight">Pay first before collecting your order.</span>
+            </p>
+            <button className="receipt-button" onClick={handleCloseReceipt}>
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
