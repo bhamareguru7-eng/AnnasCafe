@@ -11,6 +11,7 @@ const CustomerDashboard = () => {
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -72,11 +73,17 @@ const CustomerDashboard = () => {
   };
 
   const categories = ['All', ...new Set(menu.map(item => item.category))];
+  
   const filteredItems = activeCategory === 'All' 
     ? menu 
     : menu.filter(item => item.category === activeCategory);
 
-
+    const searchedItems = searchQuery 
+    ? filteredItems.filter(item => 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description || '').toLowerCase().includes(searchQuery.toLowerCase())
+      ) 
+    : filteredItems;
 
   if (loading) {
     return (
@@ -172,10 +179,17 @@ const CustomerDashboard = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+        
+        .header-left {
+          flex: 1;
+          min-width: 250px;
         }
         
         .title {
-          font-size: 1.875rem;
+          font-size: 1.5rem;
           font-weight: 700;
           color: #1e293b;
           margin-bottom: 0.25rem;
@@ -188,6 +202,34 @@ const CustomerDashboard = () => {
           color: #64748b;
           font-size: 0.875rem;
           font-weight: 500;
+        }
+        
+        .search-container {
+          flex: 1;
+          min-width: 250px;
+          max-width: 400px;
+        }
+        
+        .search-bar {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 0.75rem;
+          border: 1px solid #e2e8f0;
+          font-size: 0.9375rem;
+          transition: all 0.3s ease;
+          background-color: white;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+          color:#94a3b8;
+        }
+        
+        .search-bar:focus {
+          outline: none;
+          border-color: #a5b4fc;
+          box-shadow: 0 0 0 3px rgba(199, 210, 254, 0.5);
+        }
+        
+        .search-bar::placeholder {
+          color: #94a3b8;
         }
         
         .cart-button {
@@ -205,6 +247,7 @@ const CustomerDashboard = () => {
           border: none;
           cursor: pointer;
           transition: all 0.3s ease;
+          flex-shrink: 0;
         }
         
         .cart-button:hover {
@@ -244,7 +287,7 @@ const CustomerDashboard = () => {
           display: flex;
           flex-wrap: wrap;
           gap: 0.75rem;
-          margin-bottom: 2.5rem;
+          margin-bottom: 1.5rem;
         }
         
         .category-button {
@@ -429,10 +472,21 @@ const CustomerDashboard = () => {
       <div className="dashboard-container">
         <header className="header">
           <div className="header-content">
-            <div>
-              <h1 className="title">Gourmet House</h1>
-              <p className="subtitle">Premium dining experience</p>
+            <div className="header-left">
+              <h1 className="title">Annas Cafe</h1>
+              <p className="subtitle">Brews, Bites & Bliss</p>
             </div>
+            
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-bar"
+                placeholder="Search menu items..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
             <button 
               className="cart-button"
               onClick={() => setIsCartOpen(true)}
@@ -466,8 +520,8 @@ const CustomerDashboard = () => {
           </div>
 
           <div className="menu-grid">
-            {filteredItems.length > 0 ? (
-              filteredItems.map(item => (
+            {searchedItems.length > 0 ? (
+              searchedItems.map(item => (
                 <div key={item.id} className="menu-item">
                   <div className="menu-item-content">
                     <div className="menu-item-header">
@@ -498,7 +552,7 @@ const CustomerDashboard = () => {
                   <path fill="currentColor" d="M12,3A9,9 0 0,0 3,12H0L4,16L8,12H5A7,7 0 0,1 12,5A7,7 0 0,1 19,12A7,7 0 0,1 12,19C10.5,19 9.09,18.5 7.94,17.7L6.5,19.14C8.04,20.3 9.94,21 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M14,12A2,2 0 0,0 12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12Z" />
                 </svg>
                 <h3>No items found</h3>
-                <p>Try selecting a different category</p>
+                <p>Try a different search or category</p>
               </div>
             )}
           </div>

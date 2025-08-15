@@ -1,18 +1,31 @@
 "use client"
 
 import { supabase } from '@/lib/supabase';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
+  const [showTableInput, setShowTableInput] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [tableNo, setTableNo] = useState('');
+  const [tableError, setTableError] = useState('');
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const handlePlaceOrder = () => {
     if (cartItems.length === 0) return;
+    setShowTableInput(true);
+  };
+
+  const handleTableSubmit = () => {
+    if (!tableNo || tableNo.trim() === '') {
+      setTableError('Please enter a table number');
+      return;
+    }
+    setTableError('');
+    setShowTableInput(false);
     setShowConfirmation(true);
   };
 
@@ -21,7 +34,11 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
     try {
       const { data, error } = await supabase
         .from('orders')
-        .insert({ iteminfo: JSON.stringify(cartItems) });
+        .insert({ 
+          iteminfo: JSON.stringify(cartItems),
+          tableno: tableNo,
+          status: 'pending'
+        });
       
       if (error) throw error;
       
@@ -37,12 +54,16 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
 
   const handleCloseReceipt = () => {
     setShowReceipt(false);
+    setTableNo('');
     onClose();
   };
 
   const handleModalClose = () => {
     setShowConfirmation(false);
     setShowReceipt(false);
+    setShowTableInput(false);
+    setTableNo('');
+    setTableError('');
     onClose();
   };
 
@@ -469,6 +490,102 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           transform: translateY(0);
         }
 
+        /* Table Input Modal Styles */
+        .table-input-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #fff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1001;
+          backdrop-filter: blur(4px);
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .table-input-container {
+          background-color: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          width: 100%;
+          max-width: 28rem;
+          padding: 2rem;
+          text-align: center;
+          animation: slideUp 0.3s ease-out;
+          border: 1px solid #e2e8f0;
+        }
+
+        .table-input-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin-bottom: 1.5rem;
+        }
+
+        .table-input-field {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          font-size: 1rem;
+          margin-bottom: 1rem;
+          transition: all 0.2s;
+          background-color:white;
+          color: #1e293b;
+        }
+
+        .table-input-field:focus {
+          outline: none;
+          border-color: #4f46e5;
+          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .table-input-error {
+          color: #ef4444;
+          font-size: 0.875rem;
+          margin-bottom: 1rem;
+          min-height: 1.25rem;
+        }
+
+        .table-input-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        .table-input-submit {
+          padding: 0.75rem 1.5rem;
+          background-color: #4f46e5;
+          color: white;
+          border: none;
+          border-radius: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .table-input-submit:hover {
+          background-color: #4338ca;
+        }
+
+        .table-input-cancel {
+          padding: 0.75rem 1.5rem;
+          background-color: white;
+          color: #64748b;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .table-input-cancel:hover {
+          background-color: #f1f5f9;
+        }
+
         .spinner {
           width: 1.25rem;
           height: 1.25rem;
@@ -574,6 +691,42 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         </div>
       </div>
 
+      {/* Table Input Modal */}
+      {showTableInput && (
+        <div className="table-input-modal">
+          <div className="table-input-container" onClick={(e) => e.stopPropagation()}>
+            <h3 className="table-input-title">Enter Your Table Number</h3>
+            <input
+              type="text"
+              className="table-input-field"
+              placeholder="Table number"
+              value={tableNo}
+              onChange={(e) => setTableNo(e.target.value)}
+              autoFocus
+            />
+            <div className="table-input-error">{tableError}</div>
+            <div className="table-input-buttons">
+              <button 
+                className="table-input-submit"
+                onClick={handleTableSubmit}
+              >
+                Continue
+              </button>
+              <button 
+                className="table-input-cancel"
+                onClick={() => {
+                  setShowTableInput(false);
+                  setTableNo('');
+                  setTableError('');
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="confirmation-modal">
@@ -584,7 +737,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
             </svg>
             <h3 className="confirmation-title">Confirm Your Order</h3>
             <p className="confirmation-text">
-              You're about to place an order for <strong>₹{totalPrice}</strong> with <strong>{totalItems} items</strong>.
+              You're about to place an order for <strong>₹{totalPrice}</strong> with <strong>{totalItems} items</strong> to table <strong>{tableNo}</strong>.
             </p>
             <div className="confirmation-buttons">
               <button 
@@ -621,7 +774,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
             </svg>
             <h3 className="receipt-title">Order Successful!</h3>
             <p className="receipt-text">
-              Your order has been placed successfully. Please proceed to the counter for payment.
+              Your order has been placed successfully for table <strong>{tableNo}</strong>. Please proceed to the counter for payment.
             </p>
          
             <button className="receipt-button" onClick={handleCloseReceipt}>
