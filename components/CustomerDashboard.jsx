@@ -4,49 +4,37 @@ import React, { useEffect, useState } from 'react';
 import CustomerCart from './CustomerCart';
 import { supabase } from '@/lib/supabase';
 
-const menuItems = [
-  { id: 1, name: 'Butter Chicken', price: 250, category: 'Main Course', description: 'Creamy tomato-based curry with tender chicken' },
-  { id: 2, name: 'Paneer Tikka', price: 180, category: 'Starter', description: 'Grilled cottage cheese with aromatic spices' },
-  { id: 3, name: 'Dal Tadka', price: 150, category: 'Main Course', description: 'Yellow lentils tempered with cumin and garlic' },
-  { id: 4, name: 'Garlic Naan', price: 30, category: 'Bread', description: 'Soft bread with garlic and herbs' },
-  { id: 5, name: 'Chicken Biryani', price: 220, category: 'Main Course', description: 'Fragrant basmati rice with spiced chicken' },
-  { id: 6, name: 'Mango Lassi', price: 60, category: 'Beverage', description: 'Refreshing yogurt drink with mango' },
-  { id: 7, name: 'Masala Dosa', price: 120, category: 'Main Course', description: 'Crispy crepe with spiced potato filling' },
-  { id: 8, name: 'Samosa', price: 40, category: 'Starter', description: 'Crispy pastry with spiced potato filling' },
-];
-
-
-
 const CustomerDashboard = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [menu,setMenu] = useState();
-  const[loading,setLoading] = useState(false);
+  const [menu, setMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchMenu = async () => {
       try {
         setLoading(true);
         const { data, error: supabaseError } = await supabase
           .from('menu')
-          .select('*');
+          .select('*')
+          .order('id', { ascending: true });
 
         if (supabaseError) {
           throw supabaseError;
         }
+
         setMenu(data || []);
-        console.log(data);
       } catch (err) {
         console.error('Error fetching menu:', err);
         setError(err.message);
       } finally {
         setLoading(false);
-      
       }
     };
     
     fetchMenu();
-    
   }, []);
 
   const addToCart = (item) => {
@@ -79,10 +67,26 @@ const CustomerDashboard = () => {
     setCart(prevCart => prevCart.filter(item => item.id !== itemId));
   };
 
-  const categories = ['All', ...new Set(menuItems.map(item => item.category))];
+  const categories = ['All', ...new Set(menu.map(item => item.category))];
   const filteredItems = activeCategory === 'All' 
-    ? menuItems 
-    : menuItems.filter(item => item.category === activeCategory);
+    ? menu 
+    : menu.filter(item => item.category === activeCategory);
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <div className="loading-spinner">Loading menu...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <div className="error-message">Error loading menu: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -257,6 +261,18 @@ const CustomerDashboard = () => {
         
         .add-to-cart-button:hover {
           background-color: #4338ca;
+        }
+
+        .loading-spinner, .error-message {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          font-size: 1.2rem;
+        }
+        
+        .error-message {
+          color: #ef4444;
         }
       `}</style>
 
