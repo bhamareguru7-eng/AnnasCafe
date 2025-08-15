@@ -162,16 +162,21 @@ const CustomerDashboard = () => {
           min-height: 100vh;
           background-color: #f8fafc;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          overflow:visible;
+          position: relative;
         }
         
         .header {
-                    position: sticky;
-                    top: 0;
-                    background-color: white;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                    padding: 1.5rem;
-                    z-index: 1000; /* Keep it above all content */
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          background-color: white;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
 
         
@@ -210,7 +215,6 @@ const CustomerDashboard = () => {
           flex: 1;
           min-width: 250px;
           max-width: 400px;
-          margin-bottom:19px;
         }
         
         .search-bar {
@@ -222,7 +226,7 @@ const CustomerDashboard = () => {
           transition: all 0.3s ease;
           background-color: white;
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-          color:#94a3b8;
+          color: #475569;
         }
         
         .search-bar:focus {
@@ -284,6 +288,7 @@ const CustomerDashboard = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem 1.5rem;
+          margin-top: 120px; /* Add space for fixed header */
         }
         
         .category-filter {
@@ -291,6 +296,7 @@ const CustomerDashboard = () => {
           flex-wrap: wrap;
           gap: 0.75rem;
           margin-bottom: 1.5rem;
+          padding-top:30px;
         }
         
         .category-button {
@@ -470,6 +476,34 @@ const CustomerDashboard = () => {
           margin-bottom: 1.5rem;
           color: #cbd5e1;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .header {
+            padding: 1rem;
+          }
+          
+          .header-content {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+          }
+          
+          .header-left {
+            text-align: center;
+            min-width: auto;
+          }
+          
+          .search-container {
+            min-width: auto;
+            max-width: none;
+          }
+          
+          .main-content {
+            margin-top: 180px; /* Increase space for mobile */
+            padding: 1rem;
+          }
+        }
       `}</style>
 
       <div className="dashboard-container">
@@ -480,7 +514,7 @@ const CustomerDashboard = () => {
               <p className="subtitle">Brews, Bites & Bliss</p>
             </div>
             
-            
+           
             
             <button 
               className="cart-button"
@@ -498,11 +532,7 @@ const CustomerDashboard = () => {
                 </span>
               )}
             </button>
-          </div>
-        </header>
-
-        <main className="main-content">
-        <div className="search-container">
+            <div className="search-container">
               <input
                 type="text"
                 className="search-bar"
@@ -511,6 +541,10 @@ const CustomerDashboard = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+          </div>
+        </header>
+
+        <main className="main-content">
           <div className="category-filter">
             {categories.map(category => (
               <button
