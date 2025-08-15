@@ -180,20 +180,21 @@ const CustomerDashboard = () => {
         }
 
         
-        .header-content {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-        
-        .header-left {
-          flex: 1;
-          min-width: 250px;
-        }
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-left {
+  text-align: center; /* center text inside */
+}
+
+
+
         
         .title {
           font-size: 1.5rem;
@@ -215,10 +216,10 @@ const CustomerDashboard = () => {
         }
         
         .search-container {
-          flex: 1;
-          min-width: 250px;
-          max-width: 400px;
-        }
+  flex: 1;
+  max-width: 400px;
+}
+
         
         .search-bar {
           width: 90%;
@@ -242,24 +243,26 @@ const CustomerDashboard = () => {
           color: #94a3b8;
         }
         
-        .cart-button {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.25rem;
-          background-color: #4f46e5;
-          color: white;
-          border-radius: 0.75rem;
-          font-weight: 600;
-          font-size: 0.9375rem;
-          box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          flex-shrink: 0;
-          width:30%;
-        }
+.cart-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #4f46e5;
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  width: auto; /* no fixed width */
+  margin-left: auto; /* pushes to far right */
+}
+
         
         .cart-button:hover {
           background-color: #4338ca;
@@ -497,23 +500,17 @@ const CustomerDashboard = () => {
             min-width: auto;
           }
           
-          .header-2 {
-                display: flex;
-                align-items: center;   /* vertically center them */
-                justify-content: flex-end; /* push them to the right if needed */
-                gap: 1rem;              /* space between cart and search bar */
-                }
-                .search-container {
-                flex: 1;                /* search bar takes remaining space */
-                max-width: 400px;
-                }
-                .cart-button {
-                flex-shrink: 0;         /* keep button from shrinking */
+.header-2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* search bar on left */
+  width: 100%;
 }
+
           
           .main-content {
             padding: 1rem;
-            margin-top:36%;
+            margin-top:37%;
           }
         }
       `}</style>
@@ -528,6 +525,15 @@ const CustomerDashboard = () => {
             
            
             <div className="header-2">
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-bar"
+                placeholder="Search menu items..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              </div>
             <button 
               className="cart-button"
               onClick={() => setIsCartOpen(true)}
@@ -544,15 +550,7 @@ const CustomerDashboard = () => {
                 </span>
               )}
             </button>
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-bar"
-                placeholder="Search menu items..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              </div>
+            
             </div>
           </div>
         </header>
