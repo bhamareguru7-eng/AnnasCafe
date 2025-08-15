@@ -3,9 +3,10 @@
 import { supabase } from '@/lib/supabase';
 import React, { useEffect, useState } from 'react';
 
-const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose }) => {
+const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -16,17 +17,22 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
   };
 
   const handleConfirmOrder = async() => {
-    const {data,error} = await supabase
-    .from('orders')
-    .insert({iteminfo:JSON.stringify(cartItems)});
-
-    if(error){
-        console.log('Error occoured while inserting data');
-        return;
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert({ iteminfo: JSON.stringify(cartItems) });
+      
+      if (error) throw error;
+      
+      onClearCart();
+      setShowConfirmation(false);
+      setShowReceipt(true);
+    } catch (err) {
+      console.error('Error placing order:', err);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setShowConfirmation(false);
-    setShowReceipt(true);
   };
 
   const handleCloseReceipt = () => {
@@ -55,21 +61,29 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           display: flex;
           justify-content: center;
           align-items: center;
-          z-index: 50;
+          z-index: 1000;
+          backdrop-filter: blur(4px);
+          animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         .modal-container {
           background-color: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border-radius: 1rem;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           width: 100%;
           max-width: 32rem;
           max-height: 90vh;
           overflow: hidden;
-          animation: modalFadeIn 0.3s ease-out;
+          animation: slideUp 0.3s ease-out;
+          border: 1px solid #e2e8f0;
         }
         
-        @keyframes modalFadeIn {
+        @keyframes slideUp {
           from {
             opacity: 0;
             transform: translateY(1rem);
@@ -85,13 +99,17 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           justify-content: space-between;
           align-items: center;
           padding: 1.5rem;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid #f1f5f9;
+          background-color: #f8fafc;
         }
         
         .modal-title {
           font-size: 1.25rem;
-          font-weight: 600;
+          font-weight: 700;
           color: #1e293b;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
         
         .close-button {
@@ -101,6 +119,14 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           cursor: pointer;
           font-size: 1.5rem;
           line-height: 1;
+          transition: all 0.2s;
+          padding: 0.5rem;
+          border-radius: 50%;
+        }
+        
+        .close-button:hover {
+          background-color: #f1f5f9;
+          color: #4f46e5;
         }
         
         .modal-content {
@@ -115,26 +141,36 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
         }
         
         .empty-cart-icon {
-          font-size: 3rem;
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1.5rem;
           color: #cbd5e1;
-          margin-bottom: 1rem;
         }
         
         .empty-cart-text {
           color: #64748b;
+          font-size: 1rem;
+          font-weight: 500;
         }
         
         .cart-items {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 1.25rem;
         }
         
         .cart-item {
           display: flex;
           justify-content: space-between;
-          padding: 1rem 0;
-          border-bottom: 1px solid #f1f5f9;
+          padding: 1rem;
+          border-radius: 0.75rem;
+          transition: all 0.2s;
+          border: 1px solid #f1f5f9;
+        }
+        
+        .cart-item:hover {
+          border-color: #e0e7ff;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .item-info {
@@ -145,24 +181,27 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           font-weight: 600;
           color: #1e293b;
           margin-bottom: 0.25rem;
+          font-size: 1rem;
         }
         
         .item-price {
           color: #64748b;
           font-size: 0.875rem;
+          font-weight: 500;
         }
         
         .item-controls {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 1.25rem;
         }
         
         .quantity-controls {
           display: flex;
           align-items: center;
           border: 1px solid #e2e8f0;
-          border-radius: 0.375rem;
+          border-radius: 0.75rem;
+          overflow: hidden;
         }
         
         .quantity-button {
@@ -172,25 +211,33 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           align-items: center;
           justify-content: center;
           background-color: #f8fafc;
-          color: #64748b;
+          color: #4f46e5;
           border: none;
           cursor: pointer;
+          font-weight: 600;
+          transition: all 0.2s;
         }
         
         .quantity-button:hover {
-          background-color: #f1f5f9;
+          background-color: #e0e7ff;
+        }
+        
+        .quantity-button:active {
+          background-color: #c7d2fe;
         }
         
         .quantity-display {
           width: 2rem;
           text-align: center;
-          font-weight: 500;
+          font-weight: 600;
+          color: #1e293b;
         }
         
         .item-total {
-          width: 4rem;
+          width: 5rem;
           text-align: right;
-          font-weight: 600;
+          font-weight: 700;
+          color: #4f46e5;
         }
         
         .remove-button {
@@ -198,13 +245,20 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           background: none;
           border: none;
           cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+          transition: all 0.2s;
+        }
+        
+        .remove-button:hover {
+          background-color: #fee2e2;
         }
         
         .checkout-section {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-top: 1.5rem;
+          margin-top: 2rem;
           padding-top: 1.5rem;
           border-top: 1px solid #e2e8f0;
         }
@@ -220,19 +274,31 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           background-color: #4f46e5;
           color: white;
           border: none;
-          border-radius: 0.375rem;
-          font-weight: 500;
+          border-radius: 0.75rem;
+          font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.2s;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
         }
         
         .checkout-button:hover {
           background-color: #4338ca;
+          transform: translateY(-1px);
+          box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        
+        .checkout-button:active {
+          transform: translateY(0);
         }
         
         .checkout-button:disabled {
           background-color: #cbd5e1;
           cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
 
         /* Confirmation Modal Styles */
@@ -246,28 +312,33 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           display: flex;
           justify-content: center;
           align-items: center;
-          z-index: 60;
+          z-index: 1001;
+          backdrop-filter: blur(4px);
+          animation: fadeIn 0.3s ease-out;
         }
 
         .confirmation-container {
           background-color: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border-radius: 1rem;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
           width: 100%;
-          max-width: 24rem;
+          max-width: 28rem;
           padding: 2rem;
           text-align: center;
-          animation: modalFadeIn 0.3s ease-out;
+          animation: slideUp 0.3s ease-out;
+          border: 1px solid #e2e8f0;
         }
 
         .confirmation-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1.5rem;
+          color: #f59e0b;
         }
 
         .confirmation-title {
           font-size: 1.5rem;
-          font-weight: 600;
+          font-weight: 700;
           color: #1e293b;
           margin-bottom: 1rem;
         }
@@ -275,6 +346,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
         .confirmation-text {
           color: #64748b;
           margin-bottom: 2rem;
+          line-height: 1.6;
         }
 
         .confirmation-buttons {
@@ -288,52 +360,72 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           background-color: #10b981;
           color: white;
           border: none;
-          border-radius: 0.375rem;
-          font-weight: 500;
+          border-radius: 0.75rem;
+          font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.2s;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
         }
 
         .confirm-button:hover {
           background-color: #059669;
+          transform: translateY(-1px);
+          box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+
+        .confirm-button:active {
+          transform: translateY(0);
+        }
+
+        .confirm-button:disabled {
+          background-color: #a7f3d0;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
 
         .cancel-button {
           padding: 0.75rem 1.5rem;
-          background-color: #f1f5f9;
+          background-color: white;
           color: #64748b;
-          border: none;
-          border-radius: 0.375rem;
-          font-weight: 500;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.2s;
+          transition: all 0.3s ease;
         }
 
         .cancel-button:hover {
-          background-color: #e2e8f0;
+          background-color: #f1f5f9;
+          border-color: #cbd5e1;
         }
 
         /* Receipt Modal Styles */
         .receipt-container {
           background-color: white;
-          border-radius: 0.5rem;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border-radius: 1rem;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
           width: 100%;
-          max-width: 24rem;
+          max-width: 28rem;
           padding: 2rem;
           text-align: center;
-          animation: modalFadeIn 0.3s ease-out;
+          animation: slideUp 0.3s ease-out;
+          border: 1px solid #e2e8f0;
         }
 
         .receipt-icon {
-          font-size: 3rem;
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1.5rem;
           color: #10b981;
-          margin-bottom: 1rem;
         }
 
         .receipt-title {
           font-size: 1.5rem;
-          font-weight: 600;
+          font-weight: 700;
           color: #10b981;
           margin-bottom: 1rem;
         }
@@ -341,12 +433,17 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
         .receipt-text {
           color: #64748b;
           margin-bottom: 1rem;
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
         .receipt-highlight {
-          color: #dc2626;
+          color: #1e293b;
           font-weight: 600;
+          background-color: #f0fdf4;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.375rem;
+          display: inline-block;
+          margin: 0.5rem 0;
         }
 
         .receipt-button {
@@ -354,29 +451,65 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
           background-color: #4f46e5;
           color: white;
           border: none;
-          border-radius: 0.375rem;
-          font-weight: 500;
+          border-radius: 0.75rem;
+          font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.2s;
-          margin-top: 1rem;
+          transition: all 0.3s ease;
+          margin-top: 1.5rem;
+          box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
         }
 
         .receipt-button:hover {
           background-color: #4338ca;
+          transform: translateY(-1px);
+          box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        .receipt-button:active {
+          transform: translateY(0);
+        }
+
+        .spinner {
+          width: 1.25rem;
+          height: 1.25rem;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
 
       <div className="modal-overlay" onClick={handleModalClose}>
         <div className="modal-container" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
-            <h3 className="modal-title">Your Order ({totalItems} items)</h3>
-            <button className="close-button" onClick={handleModalClose}>×</button>
+            <h3 className="modal-title">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              Your Order ({totalItems} {totalItems === 1 ? 'item' : 'items'})
+            </h3>
+            <button className="close-button" onClick={handleModalClose}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
 
           <div className="modal-content">
             {cartItems.length === 0 ? (
               <div className="empty-cart">
-                <div className="empty-cart-icon">🛒</div>
+                <svg className="empty-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
                 <p className="empty-cart-text">Your cart is empty</p>
               </div>
             ) : (
@@ -409,7 +542,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
                           className="remove-button"
                           onClick={() => onRemoveItem(item.id)}
                         >
-                          🗑️
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                          </svg>
                         </button>
                       </div>
                     </div>
@@ -421,7 +559,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
                   <button
                     className="checkout-button"
                     onClick={handlePlaceOrder}
+                    disabled={cartItems.length === 0}
                   >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14"></path>
+                      <path d="M12 5l7 7-7 7"></path>
+                    </svg>
                     Place Order
                   </button>
                 </div>
@@ -434,17 +577,33 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="confirmation-modal">
-          <div className="confirmation-container">
-            <div className="confirmation-icon">❓</div>
-            <h3 className="confirmation-title">Confirm Order</h3>
+          <div className="confirmation-container" onClick={(e) => e.stopPropagation()}>
+            <svg className="confirmation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 12l3 3 5-5"></path>
+            </svg>
+            <h3 className="confirmation-title">Confirm Your Order</h3>
             <p className="confirmation-text">
-              Are you sure you want to place this order for ₹{totalPrice}?
+              You're about to place an order for <strong>₹{totalPrice}</strong> with <strong>{totalItems} items</strong>.
             </p>
             <div className="confirmation-buttons">
-              <button className="confirm-button" onClick={handleConfirmOrder}>
-                Confirm
+              <button 
+                className="confirm-button" 
+                onClick={handleConfirmOrder}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="spinner"></div>
+                    Processing...
+                  </>
+                ) : 'Confirm Order'}
               </button>
-              <button className="cancel-button" onClick={() => setShowConfirmation(false)}>
+              <button 
+                className="cancel-button" 
+                onClick={() => setShowConfirmation(false)}
+                disabled={isSubmitting}
+              >
                 Cancel
               </button>
             </div>
@@ -455,17 +614,22 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose 
       {/* Receipt Modal */}
       {showReceipt && (
         <div className="confirmation-modal">
-          <div className="receipt-container">
-            <div className="receipt-icon">✅</div>
-            <h3 className="receipt-title">Order Placed Successfully!</h3>
+          <div className="receipt-container" onClick={(e) => e.stopPropagation()}>
+            <svg className="receipt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h3 className="receipt-title">Order Successful!</h3>
             <p className="receipt-text">
-              Please collect your receipt from the counter.
+              Your order has been placed successfully. Please proceed to the counter for payment.
             </p>
-            <p className="receipt-text">
-              <span className="receipt-highlight">Pay first before collecting your order.</span>
-            </p>
+         
             <button className="receipt-button" onClick={handleCloseReceipt}>
               Got it!
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginLeft: '0.5rem'}}>
+                <path d="M5 12h14"></path>
+                <path d="M12 5l7 7-7 7"></path>
+              </svg>
             </button>
           </div>
         </div>
