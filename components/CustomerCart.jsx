@@ -36,8 +36,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         .from('orders')
         .insert({ 
           iteminfo: JSON.stringify(cartItems),
-          tableno: tableNo,
-          status: 'pending'
+          tableno: tableNo
         });
       
       if (error) throw error;
