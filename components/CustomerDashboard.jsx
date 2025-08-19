@@ -737,7 +737,33 @@ const CustomerDashboard = () => {
           border-radius: 8px;
           border: 2px dashed #c4ad8f;
         }
-        
+        .price-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d6c9b1;
+}
+
+/* Remove the price from the header since we're showing it in the container */
+.menu-item-header .menu-item-price {
+  display: none;
+}
+
+/* Adjust the button width to be smaller */
+.price-button-container .add-to-cart-button {
+  width: auto;
+  padding: 0.75rem 1.25rem;
+}
+
+/* Make the price in the container more prominent */
+.price-button-container .menu-item-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8B4513;
+  font-family: 'Playfair Display', serif;
+}
         .empty-state-icon {
           width: 5rem;
           height: 5rem;
@@ -858,7 +884,7 @@ const CustomerDashboard = () => {
     <input
       type="text"
       className="search-bar"
-      placeholder="Searchs"
+      placeholder="Search"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
     />
@@ -903,26 +929,31 @@ const CustomerDashboard = () => {
               searchedItems.map(item => (
                 <div key={item.id} className="menu-item">
                   <div className="menu-item-content">
-                    <div className="menu-item-header">
-                      <div className="menu-item-info">
-                        <h3 className="menu-item-name">{item.name}</h3>
-                        <span className="menu-item-category">{item.category}</span>
-                      </div>
-                      <span className="menu-item-price">₹{item.price}</span>
-                    </div>
-                    <p className="menu-item-description">{item.description}</p>
-                    <button
-                      className="add-to-cart-button"
-                      onClick={() => addToCart(item)}
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="9" cy="21" r="1"/>
-                        <circle cx="20" cy="21" r="1"/>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                      </svg>
-                      Add to Order
-                    </button>
-                  </div>
+  <div className="menu-item-header">
+    <div className="menu-item-info">
+      <h3 className="menu-item-name">{item.name}</h3>
+      <span className="menu-item-category">{item.category}</span>
+    </div>
+    <span className="menu-item-price">₹{item.price}</span>
+  </div>
+  <p className="menu-item-description">{item.description}</p>
+  
+  {/* Add this container to put price and button on same line */}
+  <div className="price-button-container">
+    <span className="menu-item-price">₹{item.price}</span>
+    <button
+      className="add-to-cart-button"
+      onClick={() => addToCart(item)}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="9" cy="21" r="1"/>
+        <circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      Add to Order
+    </button>
+  </div>
+</div>
                 </div>
               ))
             ) : (
