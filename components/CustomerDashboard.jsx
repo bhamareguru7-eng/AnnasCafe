@@ -450,7 +450,227 @@ const CustomerDashboard = () => {
           margin-bottom: 2rem;
           font-size: 1.1rem;
         }
-        
+        /* Add these styles to your existing CSS */
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .header-left {
+    order: 1;
+    text-align: center;
+  }
+  
+  .search-cart-wrapper {
+    order: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .search-container {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  .history-button, .cart-button {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    justify-content: center;
+    min-height: 44px; /* Minimum touch target size */
+  }
+  
+  .history-button span, .cart-button span {
+    display: inline; /* Ensure text is always visible */
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .main-content {
+    margin-top: 160px;
+    padding: 1rem;
+  }
+  
+  .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #8B4513;
+    color: #f5f1e6;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border: 2px solid #f5f1e6;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.5rem;
+  }
+  
+  .search-cart-wrapper {
+    gap: 0.5rem;
+  }
+  
+  .button-group {
+    gap: 0.5rem;
+  }
+  
+  .history-button, .cart-button {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .history-button svg, .cart-button svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  
+  .search-bar {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .search-icon {
+    left: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .main-content {
+    margin-top: 160px;
+  }
+  
+  .category-filter {
+    padding: 1rem;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  
+  .category-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .cart-badge {
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+  .history-button, .cart-button {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.625rem;
+  }
+  
+  /* Keep text visible even on small screens */
+  .history-button span, .cart-button span {
+    display: inline;
+    font-size: 0.75rem;
+  }
+  
+  .cart-badge {
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+  }
+}
+
+/* Ensure buttons remain accessible */
+@media (max-width: 320px) {
+  .search-cart-wrapper {
+    gap: 0.25rem;
+  }
+  
+  .button-group {
+    gap: 0.25rem;
+  }
+  
+  .history-button, .cart-button {
+    min-height: 44px;
+    padding: 0.5rem;
+  }
+  
+  .history-button span, .cart-button span {
+    font-size: 0.7rem;
+  }
+}
+
+/* Desktop styles to ensure text is visible */
+.history-button, .cart-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.history-button span, .cart-button span {
+  display: inline; /* Always show text */
+}
+
+.cart-button {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #8B4513;
+  color: #f5f1e6;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 2px solid #f5f1e6;
+}
         .retry-button {
           display: inline-flex;
           align-items: center;
@@ -741,183 +961,7 @@ const CustomerDashboard = () => {
           color: #8a735a;
           pointer-events: none;
         }
-        /* Add these styles to your existing CSS */
-
-/* Mobile Responsive Styles */
-@media (max-width: 768px) {
-  .header {
-    padding: 0.75rem 1rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .header-left {
-    order: 1;
-  }
-  
-  .search-cart-wrapper {
-    order: 2;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  
-  .search-container {
-    order: 1;
-    max-width: 100%;
-    margin-bottom: 0.5rem;
-  }
-  
-  .history-button {
-    order: 2;
-    flex: 1;
-    min-width: auto;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    justify-content: center;
-  }
-  
-  .cart-button {
-    order: 3;
-    flex: 1;
-    min-width: auto;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    justify-content: center;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-    margin-bottom: 0.2rem;
-  }
-  
-  .subtitle {
-    font-size: 0.85rem;
-  }
-  
-  .main-content {
-    margin-top: 140px;
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 0.5rem;
-  }
-  
-  .search-cart-wrapper {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .search-container {
-    margin-bottom: 0;
-    order: 1;
-  }
-  
-  .button-group {
-    order: 2;
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-  }
-  
-  .history-button, .cart-button {
-    flex: 1;
-    padding: 0.625rem 0.75rem;
-    font-size: 0.85rem;
-  }
-  
-  .history-button svg, .cart-button svg {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .search-bar {
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .search-icon {
-    left: 0.75rem;
-  }
-  
-  .title {
-    font-size: 1.25rem;
-  }
-  
-  .subtitle {
-    font-size: 0.8rem;
-  }
-  
-  .main-content {
-    margin-top: 160px;
-  }
-  
-  .category-filter {
-    padding: 1rem;
-    gap: 0.5rem;
-    justify-content: center;
-  }
-  
-  .category-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
-}
-
-/* For very small screens */
-@media (max-width: 360px) {
-  .history-button, .cart-button {
-    font-size: 0.8rem;
-    padding: 0.5rem 0.625rem;
-  }
-  
-  .history-button span, .cart-button span {
-    display: none;
-  }
-  
-  .history-button, .cart-button {
-    min-width: 44px;
-    justify-content: center;
-  }
-  
-  .cart-badge {
-    top: -0.25rem;
-    right: -0.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    font-size: 0.7rem;
-  }
-}
-
-/* Stack layout for mobile */
-.mobile-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Ensure buttons remain accessible */
-@media (max-width: 320px) {
-  .search-cart-wrapper {
-    gap: 0.25rem;
-  }
-  
-  .button-group {
-    gap: 0.25rem;
-  }
-  
-  .history-button, .cart-button {
-    min-height: 44px;
-  }
-}
+        
         .cart-button {
           position: relative;
           display: inline-flex;
@@ -1378,7 +1422,7 @@ const CustomerDashboard = () => {
           onClose={() => setIsCartOpen(false)}
         />
 
-{isHistoryOpen && (
+  {isHistoryOpen && (
   <History 
     isOpen={isHistoryOpen} 
     onClose={() => setIsHistoryOpen(false)} 
