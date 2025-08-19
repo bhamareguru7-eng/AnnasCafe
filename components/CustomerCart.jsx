@@ -3,6 +3,7 @@
 import { supabase } from '@/lib/supabase';
 import React, { useState } from 'react';
 import analysis from './analysis/analysis';
+
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
@@ -72,13 +73,14 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
   return (
     <>
       <style jsx>{`
+        /* Wooden Theme Styles */
         .modal-overlay {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: rgba(60, 42, 30, 0.8);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -94,15 +96,16 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .modal-container {
-          background-color: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          background: #f5f1e6 url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23855e42' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           width: 100%;
           max-width: 36rem;
           max-height: 90vh;
           overflow: hidden;
           animation: slideUp 0.3s ease-out;
-          border: 1px solid #e2e8f0;
+          border: 2px solid #c4ad8f;
+          font-family: 'Crimson Text', serif;
         }
         
         @keyframes slideUp {
@@ -121,27 +124,22 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           justify-content: space-between;
           align-items: center;
           padding: 1.5rem;
-          border-bottom: 1px solid #f1f5f9;
-          background-color: #f8fafc;
+          border-bottom: 2px solid #c4ad8f;
+          background: #8B4513;
+          color: #f5f1e6;
         }
         
         .modal-title {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #1e293b;
           display: flex;
           align-items: center;
           gap: 0.5rem;
-        }
-        
-        @media (max-width: 640px) {
-          .modal-title {
-            font-size: 1.125rem;
-          }
+          font-family: 'Playfair Display', serif;
         }
         
         .close-button {
-          color: #64748b;
+          color: #e8dfce;
           background: none;
           border: none;
           cursor: pointer;
@@ -154,20 +152,15 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .close-button:hover {
-          background-color: #f1f5f9;
-          color: #4f46e5;
+          background-color: rgba(245, 241, 230, 0.2);
+          color: #f5f1e6;
         }
         
         .modal-content {
           padding: 1.5rem;
           max-height: 60vh;
           overflow-y: auto;
-        }
-        
-        @media (max-width: 640px) {
-          .modal-content {
-            padding: 1rem;
-          }
+          background: #f5f1e6;
         }
         
         .empty-cart {
@@ -179,11 +172,11 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           width: 4rem;
           height: 4rem;
           margin: 0 auto 1.5rem;
-          color: #cbd5e1;
+          color: #c4ad8f;
         }
         
         .empty-cart-text {
-          color: #64748b;
+          color: #7d5d3b;
           font-size: 1rem;
           font-weight: 500;
         }
@@ -196,15 +189,15 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         
         .cart-item {
           padding: 1.25rem;
-          border-radius: 0.75rem;
+          border-radius: 8px;
           transition: all 0.2s;
-          border: 1px solid #f1f5f9;
-          background-color: #fafbfc;
+          border: 1px solid #c4ad8f;
+          background-color: #e8dfce;
         }
         
         .cart-item:hover {
-          border-color: #e0e7ff;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+          border-color: #8B4513;
+          box-shadow: 0 4px 12px rgba(139, 69, 19, 0.1);
         }
         
         .item-header {
@@ -222,20 +215,21 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         
         .item-name {
           font-weight: 600;
-          color: #1e293b;
+          color: #3c2a1e;
           margin-bottom: 0.25rem;
           font-size: 1rem;
           word-break: break-word;
+          font-family: 'Playfair Display', serif;
         }
         
         .item-price {
-          color: #64748b;
+          color: #8B4513;
           font-size: 0.875rem;
           font-weight: 500;
         }
         
         .remove-button {
-          color: #ef4444;
+          color: #8B4513;
           background: none;
           border: none;
           cursor: pointer;
@@ -247,7 +241,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .remove-button:hover {
-          background-color: #fee2e2;
+          background-color: rgba(139, 69, 19, 0.1);
         }
         
         .item-controls {
@@ -257,21 +251,13 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           gap: 1rem;
         }
         
-        @media (max-width: 640px) {
-          .item-controls {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.75rem;
-          }
-        }
-        
         .quantity-controls {
           display: flex;
           align-items: center;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.75rem;
+          border: 1px solid #c4ad8f;
+          border-radius: 8px;
           overflow: hidden;
-          background-color: white;
+          background-color: #f5f1e6;
         }
         
         .quantity-button {
@@ -280,8 +266,8 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #f8fafc;
-          color: #4f46e5;
+          background-color: #e8dfce;
+          color: #8B4513;
           border: none;
           cursor: pointer;
           font-weight: 600;
@@ -290,38 +276,29 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .quantity-button:hover {
-          background-color: #e0e7ff;
+          background-color: #d6c9b1;
         }
         
         .quantity-button:active {
-          background-color: #c7d2fe;
+          background-color: #c4ad8f;
         }
         
         .quantity-display {
           width: 3rem;
           text-align: center;
           font-weight: 600;
-          color: #1e293b;
-          background-color: white;
+          color: #3c2a1e;
+          background-color: #f5f1e6;
           padding: 0.625rem 0;
         }
         
         .item-total {
           font-weight: 700;
-          color: #4f46e5;
+          color: #8B4513;
           font-size: 1.125rem;
           text-align: right;
           min-width: fit-content;
-        }
-        
-        @media (max-width: 640px) {
-          .item-total {
-            text-align: center;
-            padding: 0.5rem;
-            background-color: #f0f9ff;
-            border-radius: 0.5rem;
-            border: 1px solid #e0f2fe;
-          }
+          font-family: 'Playfair Display', serif;
         }
         
         .checkout-section {
@@ -330,41 +307,23 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           align-items: center;
           margin-top: 2rem;
           padding-top: 1.5rem;
-          border-top: 1px solid #e2e8f0;
+          border-top: 2px solid #c4ad8f;
           gap: 1rem;
-        }
-        
-        @media (max-width: 640px) {
-          .checkout-section {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 1.5rem;
-          }
         }
         
         .total-amount {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #1e293b;
-        }
-        
-        @media (max-width: 640px) {
-          .total-amount {
-            text-align: center;
-            font-size: 1.375rem;
-            padding: 0.75rem;
-            background-color: #f8fafc;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-          }
+          color: #3c2a1e;
+          font-family: 'Playfair Display', serif;
         }
         
         .checkout-button {
           padding: 0.75rem 1.5rem;
-          background-color: #4f46e5;
-          color: white;
+          background-color: #8B4513;
+          color: #f5f1e6;
           border: none;
-          border-radius: 0.75rem;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -372,21 +331,16 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+          box-shadow: 0 4px 6px rgba(139, 69, 19, 0.2);
           min-width: fit-content;
-        }
-        
-        @media (max-width: 640px) {
-          .checkout-button {
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-          }
+          font-family: 'Crimson Text', serif;
+          border: 1px solid #6b3107;
         }
         
         .checkout-button:hover {
-          background-color: #4338ca;
-          transform: translateY(-1px);
-          box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+          background-color: #6b3107;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3);
         }
         
         .checkout-button:active {
@@ -394,7 +348,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
         
         .checkout-button:disabled {
-          background-color: #cbd5e1;
+          background-color: #c4ad8f;
           cursor: not-allowed;
           transform: none;
           box-shadow: none;
@@ -407,7 +361,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: rgba(60, 42, 30, 0.8);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -418,45 +372,35 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
 
         .confirmation-container {
-          background-color: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          background: #f5f1e6;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           width: 100%;
           max-width: 28rem;
           padding: 2rem;
           text-align: center;
           animation: slideUp 0.3s ease-out;
-          border: 1px solid #e2e8f0;
-        }
-        
-        @media (max-width: 640px) {
-          .confirmation-container {
-            padding: 1.5rem;
-          }
+          border: 2px solid #c4ad8f;
+          font-family: 'Crimson Text', serif;
         }
 
         .confirmation-icon {
           width: 4rem;
           height: 4rem;
           margin: 0 auto 1.5rem;
-          color: #f59e0b;
+          color: #8B4513;
         }
 
         .confirmation-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #1e293b;
+          color: #3c2a1e;
           margin-bottom: 1rem;
-        }
-        
-        @media (max-width: 640px) {
-          .confirmation-title {
-            font-size: 1.25rem;
-          }
+          font-family: 'Playfair Display', serif;
         }
 
         .confirmation-text {
-          color: #64748b;
+          color: #5d4037;
           margin-bottom: 2rem;
           line-height: 1.6;
         }
@@ -466,19 +410,13 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           gap: 1rem;
           justify-content: center;
         }
-        
-        @media (max-width: 640px) {
-          .confirmation-buttons {
-            flex-direction: column;
-          }
-        }
 
         .confirm-button {
           padding: 0.75rem 1.5rem;
-          background-color: #10b981;
-          color: white;
+          background-color: #8B4513;
+          color: #f5f1e6;
           border: none;
-          border-radius: 0.75rem;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -486,13 +424,15 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+          box-shadow: 0 4px 6px rgba(139, 69, 19, 0.2);
+          font-family: 'Crimson Text', serif;
+          border: 1px solid #6b3107;
         }
 
         .confirm-button:hover {
-          background-color: #059669;
-          transform: translateY(-1px);
-          box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+          background-color: #6b3107;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3);
         }
 
         .confirm-button:active {
@@ -500,7 +440,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
 
         .confirm-button:disabled {
-          background-color: #a7f3d0;
+          background-color: #c4ad8f;
           cursor: not-allowed;
           transform: none;
           box-shadow: none;
@@ -508,95 +448,107 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
 
         .cancel-button {
           padding: 0.75rem 1.5rem;
-          background-color: white;
-          color: #64748b;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.75rem;
+          background-color: #f5f1e6;
+          color: #5d4037;
+          border: 1px solid #c4ad8f;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
+          font-family: 'Crimson Text', serif;
         }
 
         .cancel-button:hover {
-          background-color: #f1f5f9;
-          border-color: #cbd5e1;
+          background-color: #e8dfce;
         }
 
         /* Receipt Modal Styles */
         .receipt-container {
-          background-color: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          background: #f5f1e6;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           width: 100%;
           max-width: 28rem;
           padding: 2rem;
           text-align: center;
           animation: slideUp 0.3s ease-out;
-          border: 1px solid #e2e8f0;
-        }
-        
-        @media (max-width: 640px) {
-          .receipt-container {
-            padding: 1.5rem;
-          }
+          border: 2px solid #c4ad8f;
+          font-family: 'Crimson Text', serif;
         }
 
         .receipt-icon {
           width: 4rem;
           height: 4rem;
           margin: 0 auto 1.5rem;
-          color: #10b981;
+          color: #8B4513;
         }
 
         .receipt-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #10b981;
+          color: #8B4513;
           margin-bottom: 1rem;
-        }
-        
-        @media (max-width: 640px) {
-          .receipt-title {
-            font-size: 1.25rem;
-          }
+          font-family: 'Playfair Display', serif;
         }
 
         .receipt-text {
-          color: #64748b;
+          color: #5d4037;
           margin-bottom: 1rem;
           line-height: 1.6;
         }
 
         .receipt-highlight {
-          color: #1e293b;
+          color: #3c2a1e;
           font-weight: 600;
-          background-color: #f0fdf4;
-          padding: 0.25rem 0.5rem;
-          border-radius: 0.375rem;
+          background-color: #e8dfce;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
           display: inline-block;
           margin: 0.5rem 0;
+          border: 1px solid #c4ad8f;
+          font-family: 'Playfair Display', serif;
+        }
+
+        .counter-notice {
+          background: #8B4513;
+          color: #f5f1e6;
+          padding: 1rem;
+          border-radius: 8px;
+          margin: 1.5rem 0;
+          font-weight: 600;
+          border: 2px solid #6b3107;
+          box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+          animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.02); }
+          100% { transform: scale(1); }
         }
 
         .receipt-button {
           padding: 0.75rem 1.5rem;
-          background-color: #4f46e5;
-          color: white;
+          background-color: #8B4513;
+          color: #f5f1e6;
           border: none;
-          border-radius: 0.75rem;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
           margin-top: 1.5rem;
-          box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+          box-shadow: 0 4px 6px rgba(139, 69, 19, 0.2);
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
+          font-family: 'Crimson Text', serif;
+          border: 1px solid #6b3107;
         }
 
         .receipt-button:hover {
-          background-color: #4338ca;
-          transform: translateY(-1px);
-          box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+          background-color: #6b3107;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3);
         }
 
         .receipt-button:active {
@@ -610,7 +562,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: rgba(60, 42, 30, 0.8);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -621,60 +573,52 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         }
 
         .table-input-container {
-          background-color: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          background: #f5f1e6;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           width: 100%;
           max-width: 28rem;
           padding: 2rem;
           text-align: center;
           animation: slideUp 0.3s ease-out;
-          border: 1px solid #e2e8f0;
-        }
-        
-        @media (max-width: 640px) {
-          .table-input-container {
-            padding: 1.5rem;
-          }
+          border: 2px solid #c4ad8f;
+          font-family: 'Crimson Text', serif;
         }
 
         .table-input-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #1e293b;
+          color: #3c2a1e;
           margin-bottom: 1.5rem;
-        }
-        
-        @media (max-width: 640px) {
-          .table-input-title {
-            font-size: 1.25rem;
-          }
+          font-family: 'Playfair Display', serif;
         }
 
         .table-input-field {
           width: 100%;
           padding: 0.75rem 1rem;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.75rem;
+          border: 1px solid #c4ad8f;
+          border-radius: 8px;
           font-size: 1rem;
           margin-bottom: 1rem;
           transition: all 0.2s;
-          background-color: white;
-          color: #1e293b;
+          background-color: #f5f1e6;
+          color: #3c2a1e;
           box-sizing: border-box;
+          font-family: 'Crimson Text', serif;
         }
 
         .table-input-field:focus {
           outline: none;
-          border-color: #4f46e5;
-          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+          border-color: #8B4513;
+          box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
         }
 
         .table-input-error {
-          color: #ef4444;
+          color: #8B4513;
           font-size: 0.875rem;
           margin-bottom: 1rem;
           min-height: 1.25rem;
+          font-weight: 600;
         }
 
         .table-input-buttons {
@@ -682,49 +626,46 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
           gap: 1rem;
           justify-content: center;
         }
-        
-        @media (max-width: 640px) {
-          .table-input-buttons {
-            flex-direction: column;
-          }
-        }
 
         .table-input-submit {
           padding: 0.75rem 1.5rem;
-          background-color: #4f46e5;
-          color: white;
+          background-color: #8B4513;
+          color: #f5f1e6;
           border: none;
-          border-radius: 0.75rem;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
+          font-family: 'Crimson Text', serif;
+          border: 1px solid #6b3107;
         }
 
         .table-input-submit:hover {
-          background-color: #4338ca;
+          background-color: #6b3107;
         }
 
         .table-input-cancel {
           padding: 0.75rem 1.5rem;
-          background-color: white;
-          color: #64748b;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.75rem;
+          background-color: #f5f1e6;
+          color: #5d4037;
+          border: 1px solid #c4ad8f;
+          border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
+          font-family: 'Crimson Text', serif;
         }
 
         .table-input-cancel:hover {
-          background-color: #f1f5f9;
+          background-color: #e8dfce;
         }
 
         .spinner {
           width: 1.25rem;
           height: 1.25rem;
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          border: 2px solid rgba(245, 241, 230, 0.3);
           border-radius: 50%;
-          border-top-color: white;
+          border-top-color: #f5f1e6;
           animation: spin 1s linear infinite;
         }
 
@@ -910,8 +851,13 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
             </svg>
             <h3 className="receipt-title">Order Successful!</h3>
             <p className="receipt-text">
-              Your order has been placed successfully for table <strong>{tableNo}</strong>. Please proceed to the counter for payment.
+              Your order has been placed successfully for table <span className="receipt-highlight">{tableNo}</span>.
             </p>
+            
+            {/* Prominent "Go to Counter" notice */}
+            <div className="counter-notice">
+              Please proceed to the counter for payment
+            </div>
          
             <button className="receipt-button" onClick={handleCloseReceipt}>
               Got it!
