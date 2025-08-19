@@ -85,30 +85,197 @@ const CustomerDashboard = () => {
       ) 
     : filteredItems;
 
-  if (loading) {
-    return (
-      <div className="dashboard-container loading-state">
-        <div className="loading-overlay">
-          <div className="loading-content">
-            <div className="loading-logo">
-              <div className="logo-circle">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M8 21s-4-3-4-9 4-9 4-9M16 3s4 3 4 9-4 9-4 9M15 9l-6 6M9 9l6 6"/>
-                </svg>
+    if (loading) {
+      return (
+        <div className="dashboard-container loading-state">
+          <div className="loading-overlay">
+            <div className="loading-content">
+              <div className="wooden-logo">
+                <div className="cutlery-icon">
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#8B4513" strokeWidth="1.5">
+                    <path d="M5 21v-16h2v8h2V5h2v8h2V3h2v10a5 5 0 0 1-5 5v3H5z"/>
+                    <path d="M15 21v-6a3 3 0 0 1 3-3h1v12h-4z" fill="#8B4513" opacity="0.7"/>
+                  </svg>
+                </div>
+                <div className="wood-texture">
+                  <div className="wood-grain"></div>
+                  <div className="wood-grain"></div>
+                  <div className="wood-grain"></div>
+                </div>
+              </div>
+              <h2 className="loading-title">Anna's Café</h2>
+              <p className="loading-subtitle">Crafting your dining experience</p>
+              <div className="wooden-spinner">
+                <div className="spinner-plank"></div>
+                <div className="spinner-plank"></div>
+                <div className="spinner-plank"></div>
               </div>
             </div>
-            <h2 className="loading-title">Anna's Café</h2>
-            <p className="loading-subtitle">Preparing your culinary journey...</p>
-            <div className="loading-spinner">
-              <div className="spinner-ring"></div>
-              <div className="spinner-ring"></div>
-              <div className="spinner-ring"></div>
-            </div>
           </div>
+          
+          <style jsx>{`
+            .loading-overlay {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: #f5f1e6;
+              z-index: 1000;
+            }
+            
+            .loading-content {
+              text-align: center;
+              color: #3c2a1e;
+              padding: 3rem;
+              background: #e8dfce;
+              border-radius: 8px;
+              border: 1px solid #c4ad8f;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              max-width: 500px;
+              width: 90%;
+            }
+            
+            .wooden-logo {
+              position: relative;
+              margin: 0 auto 2rem;
+              width: 120px;
+              height: 120px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .cutlery-icon {
+              z-index: 2;
+              position: relative;
+            }
+            
+            .wood-texture {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: linear-gradient(to bottom, #8B4513 0%, #6b3107 100%);
+              border-radius: 50%;
+              overflow: hidden;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+              border: 3px solid #c4ad8f;
+            }
+            
+            .wood-grain {
+              position: absolute;
+              height: 2px;
+              background: rgba(193, 154, 107, 0.6);
+              transform-origin: center;
+              animation: woodGrain 3s infinite;
+            }
+            
+            .wood-grain:nth-child(1) {
+              top: 30%;
+              left: 10%;
+              right: 10%;
+              animation-delay: 0s;
+            }
+            
+            .wood-grain:nth-child(2) {
+              top: 50%;
+              left: 15%;
+              right: 15%;
+              animation-delay: 0.5s;
+            }
+            
+            .wood-grain:nth-child(3) {
+              top: 70%;
+              left: 5%;
+              right: 5%;
+              animation-delay: 1s;
+            }
+            
+            .loading-title {
+              font-size: 2.5rem;
+              font-weight: 700;
+              margin-bottom: 0.5rem;
+              color: #5d4037;
+              font-family: 'Playfair Display', serif;
+            }
+            
+            .loading-subtitle {
+              font-size: 1.1rem;
+              color: #7d5d3b;
+              margin-bottom: 2rem;
+              font-style: italic;
+            }
+            
+            .wooden-spinner {
+              display: flex;
+              justify-content: center;
+              gap: 0.5rem;
+              height: 12px;
+            }
+            
+            .spinner-plank {
+              width: 12px;
+              height: 100%;
+              background: linear-gradient(to bottom, #8B4513 0%, #6b3107 100%);
+              border-radius: 2px;
+              position: relative;
+              overflow: hidden;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+              animation: plankBounce 1.4s ease-in-out infinite both;
+            }
+            
+            .spinner-plank:nth-child(1) { 
+              animation-delay: -0.32s; 
+            }
+            
+            .spinner-plank:nth-child(2) { 
+              animation-delay: -0.16s; 
+            }
+            
+            .spinner-plank:nth-child(3) { 
+              animation-delay: 0s; 
+            }
+            
+            .spinner-plank::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -100%;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+              animation: woodShine 2s infinite;
+            }
+            
+            @keyframes woodGrain {
+              0%, 100% { opacity: 0.6; transform: translateX(0) scaleY(1); }
+              50% { opacity: 0.8; transform: translateX(5px) scaleY(1.2); }
+            }
+            
+            @keyframes plankBounce {
+              0%, 80%, 100% { 
+                transform: scaleY(0.3);
+                opacity: 0.5;
+              } 
+              40% { 
+                transform: scaleY(1);
+                opacity: 1;
+              }
+            }
+            
+            @keyframes woodShine {
+              0% { left: -100%; }
+              100% { left: 100%; }
+            }
+          `}</style>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
   if (error) {
     return (
@@ -691,7 +858,7 @@ const CustomerDashboard = () => {
     <input
       type="text"
       className="search-bar"
-      placeholder="Search our exquisite menu..."
+      placeholder="Searchs"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
     />
