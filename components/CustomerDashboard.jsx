@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import CustomerCart from './CustomerCart';
 import { supabase } from '@/lib/supabase';
 
+
 const CustomerDashboard = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');

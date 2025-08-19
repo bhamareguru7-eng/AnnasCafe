@@ -2,7 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import React, { useState } from 'react';
-
+import analysis from './analysis/analysis';
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
@@ -48,6 +48,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
       console.error('Error placing order:', err);
     } finally {
       setIsSubmitting(false);
+      analysis(totalPrice);
     }
   };
 
