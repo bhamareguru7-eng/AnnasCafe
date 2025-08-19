@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 const History = ({ isOpen, onClose }) => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingOrderId, setDeletingOrderId] = useState(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -39,6 +40,30 @@ const History = ({ isOpen, onClose }) => {
       console.error('Error fetching order history:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to delete this order?')) {
+      return;
+    }
+    
+    try {
+      setDeletingOrderId(orderId);
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
+      
+      if (error) throw error;
+      
+      // Remove the order from local state
+      setOrderHistory(prev => prev.filter(order => order.id !== orderId));
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      alert('Failed to delete order. Please try again.');
+    } finally {
+      setDeletingOrderId(null);
     }
   };
 
@@ -165,6 +190,7 @@ const History = ({ isOpen, onClose }) => {
           border-radius: 8px;
           border: 1px solid #c4ad8f;
           background-color: #e8dfce;
+          position: relative;
         }
         
         .order-header {
@@ -208,6 +234,7 @@ const History = ({ isOpen, onClose }) => {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
+          width: fit-content;
         }
         
         .status-paid {
@@ -217,9 +244,9 @@ const History = ({ isOpen, onClose }) => {
         }
         
         .status-unpaid {
-          background-color: #f8d7da;
-          color: #721c24;
-          border: 1px solid #f5c6cb;
+          background-color: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffeaa7;
         }
         
         .status-completed {
@@ -229,9 +256,9 @@ const History = ({ isOpen, onClose }) => {
         }
         
         .status-pending {
-          background-color: #fff3cd;
-          color: #856404;
-          border: 1px solid #ffeaa7;
+          background-color: #e2e3e5;
+          color: #383d41;
+          border: 1px solid #d6d8db;
         }
         
         .payment-message {
@@ -245,6 +272,7 @@ const History = ({ isOpen, onClose }) => {
           gap: 0.5rem;
           margin-top: 0.5rem;
           border: 1px solid #f5c6cb;
+          font-size: 0.875rem;
         }
         
         .order-total {
@@ -296,6 +324,40 @@ const History = ({ isOpen, onClose }) => {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+        
+        .delete-order-btn {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          background: #dc3545;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 0.4rem 0.6rem;
+          font-size: 0.75rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          transition: background-color 0.2s;
+        }
+        
+        .delete-order-btn:hover {
+          background: #c82333;
+        }
+        
+        .delete-order-btn:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+        }
+        
+        .order-actions {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px dashed #c4ad8f;
+        }
       `}</style>
 
       <div className="history-modal" onClick={onClose}>
@@ -335,6 +397,38 @@ const History = ({ isOpen, onClose }) => {
               <div className="order-list">
                 {orderHistory.map(order => (
                   <div key={order.id} className="order-item">
+                    {!order.payment_done && (
+                      <button 
+                        className="delete-order-btn"
+                        onClick={() => handleDeleteOrder(order.id)}
+                        disabled={deletingOrderId === order.id}
+                      >
+                        {deletingOrderId === order.id ? (
+                          <>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 2v4"/>
+                              <path d="m16 4-4 4-4-4"/>
+                              <path d="M16 20v-4"/>
+                              <path d="m20 16-4-4-4 4"/>
+                              <path d="M8 20v-4"/>
+                              <path d="m4 16 4-4 4 4"/>
+                              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                            </svg>
+                            Deleting...
+                          </>
+                        ) : (
+                          <>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M3 6h18"/>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Delete Order
+                          </>
+                        )}
+                      </button>
+                    )}
+                    
                     <div className="order-header">
                       <div className="order-info">
                         <div className="order-table">Table {order.tableno}</div>
@@ -362,7 +456,7 @@ const History = ({ isOpen, onClose }) => {
                                 <line x1="12" y1="8" x2="12" y2="12"/>
                                 <line x1="12" y1="16" x2="12.01" y2="16"/>
                               </svg>
-                              Do payment first at counter
+                              Please complete payment at the counter
                             </div>
                           ) : (
                             <span className={`status-badge ${order.order_done ? 'status-completed' : 'status-pending'}`}>
