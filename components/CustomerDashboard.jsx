@@ -352,6 +352,7 @@ const CustomerDashboard = () => {
           color: #3c2a1e;
         }
         
+        
         .loading-state, .error-state {
           background: #f5f1e6;
         }
@@ -451,90 +452,82 @@ const CustomerDashboard = () => {
           font-size: 1.1rem;
         }
         /* Add these styles to your existing CSS */
-
+        .header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          background: rgba(139, 69, 19, 0.95);
+          backdrop-filter: blur(10px);
+          border-bottom: 1px solid #6b3107;
+          padding: 1rem 2rem;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          height: auto;
+        }
+.content-wrapper {
+          margin-top: 160px;
+          padding: 0 2rem 2rem;
+        }
+        
+        .header-content {
+          max-width: 1400px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          gap: 2rem;
+        }
 /* Mobile Responsive Styles */
-@media (max-width: 768px) {
-  .header {
-    padding: 0.75rem 1rem;
-  }
-  
-  .header-content {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .header-left {
-    order: 1;
-    text-align: center;
-  }
-  
-  .search-cart-wrapper {
-    order: 2;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .search-container {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 0;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 0.75rem;
-    width: 100%;
-  }
-  
-  .history-button, .cart-button {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    justify-content: center;
-    min-height: 44px; /* Minimum touch target size */
-  }
-  
-  .history-button span, .cart-button span {
-    display: inline; /* Ensure text is always visible */
-  }
-  
-  .title {
-    font-size: 1.5rem;
-    margin-bottom: 0.2rem;
-  }
-  
-  .subtitle {
-    font-size: 0.85rem;
-  }
-  
-  .main-content {
-    margin-top: 160px;
-    padding: 1rem;
-  }
-  
-  .cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #8B4513;
-    color: #f5f1e6;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    border: 2px solid #f5f1e6;
-  }
-}
+ @media (max-width: 768px) {
+          .header {
+            padding: 1rem;
+          }
+          
+          .content-wrapper {
+            margin-top: 200px;
+            padding: 0 1rem 1rem;
+          }
+          
+          .search-cart-wrapper {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          
+          .button-group {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+          }
+          
+          .history-button, .cart-button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            justify-content: center;
+            min-height: 44px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .content-wrapper {
+            margin-top: 220px;
+          }
+          
+          .title {
+            font-size: 1.5rem;
+          }
+          
+          .subtitle {
+            font-size: 0.85rem;
+          }
+        }
 
 @media (max-width: 480px) {
   .header {
     padding: 0.5rem;
+    
   }
   
   .search-cart-wrapper {
@@ -574,7 +567,7 @@ const CustomerDashboard = () => {
   }
   
   .main-content {
-    margin-top: 160px;
+    margin-top: 200px;
   }
   
   .category-filter {
@@ -1006,9 +999,10 @@ const CustomerDashboard = () => {
           max-width: 1400px;
           margin: 0 auto;
           padding: 2rem;
-          margin-top: 100px;
+          margin-top: 160px;
           position: relative;
           z-index: 2;
+       
         }
         
         .category-filter {
@@ -1296,122 +1290,124 @@ const CustomerDashboard = () => {
       `}</style>
 
 <div className="dashboard-container">
-<header className="header">
-  <div className="header-content">
-    <div className="header-left">
-      <h1 className="title">Anna's Café</h1>
-      <p className="subtitle">Exceptional cuisine, unforgettable moments</p>
-    </div>
-    
-    <div className="search-cart-wrapper">
-      <div className="search-container">
-        <div className="search-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-        </div>
-        <input
-          type="text"
-          className="search-bar"
-          placeholder="Search dishes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+        <header className="header">
+          <div className="header-content">
+            <div className="header-left">
+              <h1 className="title">Anna's Café</h1>
+              <p className="subtitle">Exceptional cuisine, unforgettable moments</p>
+            </div>
+            
+            <div className="search-cart-wrapper">
+              <div className="search-container">
+                <div className="search-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="search-bar"
+                  placeholder="Search dishes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
-      <div className="button-group">
-        <button 
-          className="history-button"
-          onClick={fetchOrderHistory}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 3v18h18"/>
-            <path d="M7 16l5-5 5 5"/>
-            <path d="M12 7v8"/>
-          </svg>
-          <span>History</span>
-        </button>
+              <div className="button-group">
+                <button 
+                  className="history-button"
+                  onClick={fetchOrderHistory}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 3v18h18"/>
+                    <path d="M7 16l5-5 5 5"/>
+                    <path d="M12 7v8"/>
+                  </svg>
+                  <span>History</span>
+                </button>
 
-        <button 
-          className="cart-button"
-          onClick={() => setIsCartOpen(true)}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          <span>Order</span>
-          {cart.length > 0 && (
-            <span className="cart-badge">
-              {cart.reduce((sum, item) => sum + item.quantity, 0)}
-            </span>
-          )}
-        </button>
-      </div>
-    </div>
-  </div>
-</header>
-
-        <main className="main-content">
-          <div className="category-filter">
-            {categories.map(category => (
-              <button
-                key={category}
-                className={`category-button ${activeCategory === category ? 'active' : ''}`}
-                onClick={() => setActiveCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
+                <button 
+                  className="cart-button"
+                  onClick={() => setIsCartOpen(true)}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                  <span>Order</span>
+                  {cart.length > 0 && (
+                    <span className="cart-badge">
+                      {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
+        </header>
+        
+        <div className="content-wrapper">
+          <main className="main-content">
+            <div className="category-filter">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  className={`category-button ${activeCategory === category ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
 
-          <div className="menu-grid">
-            {searchedItems.length > 0 ? (
-              searchedItems.map(item => (
-                <div key={item.id} className="menu-item">
-                  <div className="menu-item-content">
-                    <div className="menu-item-header">
-                      <div className="menu-item-info">
-                        <h3 className="menu-item-name">{item.name}</h3>
-                        <span className="menu-item-category">{item.category}</span>
+            <div className="menu-grid">
+              {searchedItems.length > 0 ? (
+                searchedItems.map(item => (
+                  <div key={item.id} className="menu-item">
+                    <div className="menu-item-content">
+                      <div className="menu-item-header">
+                        <div className="menu-item-info">
+                          <h3 className="menu-item-name">{item.name}</h3>
+                          <span className="menu-item-category">{item.category}</span>
+                        </div>
+                        <span className="menu-item-price">₹{item.price}</span>
                       </div>
-                      <span className="menu-item-price">₹{item.price}</span>
-                    </div>
-                    <p className="menu-item-description">{item.description}</p>
-                    
-                    <div className="price-button-container">
-                      <span className="menu-item-price">₹{item.price}</span>
-                      <button
-                        className="add-to-cart-button"
-                        onClick={() => addToCart(item)}
-                      >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="9" cy="21" r="1"/>
-                          <circle cx="20" cy="21" r="1"/>
-                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                        </svg>
-                        Add to Order
-                      </button>
+                      <p className="menu-item-description">{item.description}</p>
+                      
+                      <div className="price-button-container">
+                        <span className="menu-item-price">₹{item.price}</span>
+                        <button
+                          className="add-to-cart-button"
+                          onClick={() => addToCart(item)}
+                        >
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                          </svg>
+                          Add to Order
+                        </button>
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="empty-state">
+                  <svg className="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
+                    <line x1="9" y1="9" x2="9.01" y2="9"/>
+                    <line x1="15" y1="9" x2="15.01" y2="9"/>
+                  </svg>
+                  <h3>No dishes found</h3>
+                  <p>Try adjusting your search or browse different categories</p>
                 </div>
-              ))
-            ) : (
-              <div className="empty-state">
-                <svg className="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
-                  <line x1="9" y1="9" x2="9.01" y2="9"/>
-                  <line x1="15" y1="9" x2="15.01" y2="9"/>
-                </svg>
-                <h3>No dishes found</h3>
-                <p>Try adjusting your search or browse different categories</p>
-              </div>
-            )}
-          </div>
-        </main>
+              )}
+            </div>
+          </main>
+        </div>
 
         <CustomerCart 
           cartItems={cart}
@@ -1422,12 +1418,12 @@ const CustomerDashboard = () => {
           onClose={() => setIsCartOpen(false)}
         />
 
-  {isHistoryOpen && (
-  <History 
-    isOpen={isHistoryOpen} 
-    onClose={() => setIsHistoryOpen(false)} 
-  />
-)}
+        {isHistoryOpen && (
+          <History 
+            isOpen={isHistoryOpen} 
+            onClose={() => setIsHistoryOpen(false)} 
+          />
+        )}
       </div>
     </>
   );
