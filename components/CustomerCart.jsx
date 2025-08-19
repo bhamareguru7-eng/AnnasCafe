@@ -2,7 +2,6 @@
 
 import { supabase } from '@/lib/supabase';
 import React, { useId, useState } from 'react';
-import analysis from './analysis/analysis';
 import { useEffect } from 'react';
 
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
@@ -19,12 +18,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
 
   useEffect(() => {
     const getOrCreateUserId = () => {
-      let id = localStorage.getItem('user_id');
+      let id = localStorage.getItem('annas_user_id');
       
       if (!id) {
        
         id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('user_id', id);
+        localStorage.setItem('annas_user_id', id);
       }
       
       setUserId(id);
@@ -69,7 +68,6 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
       console.error('Error placing order:', err);
     } finally {
       setIsSubmitting(false);
-      analysis(totalPrice);
     }
   };
 

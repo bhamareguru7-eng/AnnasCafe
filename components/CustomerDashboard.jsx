@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomerCart from './CustomerCart';
 import { supabase } from '@/lib/supabase';
+import History from './history/History';
 
 const CustomerDashboard = () => {
   const [cart, setCart] = useState([]);
@@ -12,6 +13,8 @@ const CustomerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [orderHistory, setOrderHistory] = useState([]);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -70,6 +73,31 @@ const CustomerDashboard = () => {
 
   const clearCart = () => {
     setCart([]);
+  };
+
+  const fetchOrderHistory = async () => {
+    try {
+      // Get user ID from localStorage
+      const userId = localStorage.getItem('user_id');
+      
+      if (!userId) {
+        console.log('No user ID found');
+        return;
+      }
+      
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      setOrderHistory(data || []);
+      setIsHistoryOpen(true);
+    } catch (err) {
+      console.error('Error fetching order history:', err);
+    }
   };
 
   const categories = ['All', ...new Set(menu.map(item => item.category))];
@@ -511,7 +539,189 @@ const CustomerDashboard = () => {
           color: #3c2a1e;
           font-family: 'Crimson Text', serif;
         }
+        .history-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.875rem 1.5rem;
+          background: #e8dfce;
+          color: #3c2a1e;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 1rem;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: 'Crimson Text', serif;
+          border: 1px solid #c4ad8f;
+        }
         
+        .history-button:hover {
+          background: #d6c9b1;
+          transform: translateY(-2px);
+        }
+        
+        /* History Modal Styles */
+        .history-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(60, 42, 30, 0.8);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1001;
+          backdrop-filter: blur(4px);
+          animation: fadeIn 0.3s ease-out;
+          padding: 1rem;
+        }
+        
+        .history-container {
+          background: #f5f1e6;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          width: 100%;
+          max-width: 800px;
+          max-height: 80vh;
+          overflow: hidden;
+          animation: slideUp 0.3s ease-out;
+          border: 2px solid #c4ad8f;
+          font-family: 'Crimson Text', serif;
+        }
+        
+        .history-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem;
+          border-bottom: 2px solid #c4ad8f;
+          background: #8B4513;
+          color: #f5f1e6;
+        }
+        
+        .history-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-family: 'Playfair Display', serif;
+        }
+        
+        .history-close {
+          color: #e8dfce;
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 1.5rem;
+          line-height: 1;
+          transition: all 0.2s;
+          padding: 0.5rem;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        
+        .history-close:hover {
+          background-color: rgba(245, 241, 230, 0.2);
+          color: #f5f1e6;
+        }
+        
+        .history-content {
+          padding: 1.5rem;
+          max-height: 60vh;
+          overflow-y: auto;
+          background: #f5f1e6;
+        }
+        
+        .empty-history {
+          text-align: center;
+          padding: 3rem 0;
+        }
+        
+        .empty-history-icon {
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1.5rem;
+          color: #c4ad8f;
+        }
+        
+        .empty-history-text {
+          color: #7d5d3b;
+          font-size: 1rem;
+          font-weight: 500;
+        }
+        
+        .order-list {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .order-item {
+          padding: 1.25rem;
+          border-radius: 8px;
+          border: 1px solid #c4ad8f;
+          background-color: #e8dfce;
+        }
+        
+        .order-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+          gap: 1rem;
+        }
+        
+        .order-info {
+          flex: 1;
+          min-width: 0;
+        }
+        
+        .order-table {
+          font-weight: 600;
+          color: #3c2a1e;
+          margin-bottom: 0.25rem;
+          font-size: 1rem;
+        }
+        
+        .order-date {
+          color: #8B4513;
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+        
+        .order-total {
+          font-weight: 700;
+          color: #8B4513;
+          font-size: 1.125rem;
+          text-align: right;
+          min-width: fit-content;
+          font-family: 'Playfair Display', serif;
+        }
+        
+        .order-items {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid #c4ad8f;
+        }
+        
+        .order-item-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+        }
+        
+        .order-item-name {
+          color: #3c2a1e;
+        }
+        
+        .order-item-quantity {
+          color: #8B4513;
+          font-weight: 600;
+        }
         .search-bar:focus {
           outline: none;
           border-color: #8B4513;
@@ -865,7 +1075,7 @@ const CustomerDashboard = () => {
         }
       `}</style>
 
-      <div className="dashboard-container">
+<div className="dashboard-container">
         <header className="header">
           <div className="header-content">
             <div className="header-left">
@@ -874,41 +1084,52 @@ const CustomerDashboard = () => {
             </div>
             
             <div className="search-cart-wrapper">
-  <div className="search-container">
-    <div className="search-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="11" cy="11" r="8"/>
-        <path d="m21 21-4.35-4.35"/>
-      </svg>
-    </div>
-    <input
-      type="text"
-      className="search-bar"
-      placeholder="Search"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-  </div>
+              <div className="search-container">
+                <div className="search-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="search-bar"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
-  <button 
-    className="cart-button"
-    onClick={() => setIsCartOpen(true)}
-  >
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 0 1-8 0"/>
-    </svg>
-    Your Order
-    {cart.length > 0 && (
-      <span className="cart-badge">
-        {cart.reduce((sum, item) => sum + item.quantity, 0)}
-      </span>
-    )}
-  </button>
-</div>
-</div>
+              <button 
+                className="history-button"
+                onClick={fetchOrderHistory}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 3v18h18"/>
+                  <path d="M7 16l5-5 5 5"/>
+                  <path d="M12 7v8"/>
+                </svg>
+                History
+              </button>
 
+              <button 
+                className="cart-button"
+                onClick={() => setIsCartOpen(true)}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                Your Order
+                {cart.length > 0 && (
+                  <span className="cart-badge">
+                    {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
         </header>
 
         <main className="main-content">
@@ -929,31 +1150,30 @@ const CustomerDashboard = () => {
               searchedItems.map(item => (
                 <div key={item.id} className="menu-item">
                   <div className="menu-item-content">
-  <div className="menu-item-header">
-    <div className="menu-item-info">
-      <h3 className="menu-item-name">{item.name}</h3>
-      <span className="menu-item-category">{item.category}</span>
-    </div>
-    <span className="menu-item-price">₹{item.price}</span>
-  </div>
-  <p className="menu-item-description">{item.description}</p>
-  
-  {/* Add this container to put price and button on same line */}
-  <div className="price-button-container">
-    <span className="menu-item-price">₹{item.price}</span>
-    <button
-      className="add-to-cart-button"
-      onClick={() => addToCart(item)}
-    >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="9" cy="21" r="1"/>
-        <circle cx="20" cy="21" r="1"/>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-      </svg>
-      Add to Order
-    </button>
-  </div>
-</div>
+                    <div className="menu-item-header">
+                      <div className="menu-item-info">
+                        <h3 className="menu-item-name">{item.name}</h3>
+                        <span className="menu-item-category">{item.category}</span>
+                      </div>
+                      <span className="menu-item-price">₹{item.price}</span>
+                    </div>
+                    <p className="menu-item-description">{item.description}</p>
+                    
+                    <div className="price-button-container">
+                      <span className="menu-item-price">₹{item.price}</span>
+                      <button
+                        className="add-to-cart-button"
+                        onClick={() => addToCart(item)}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="9" cy="21" r="1"/>
+                          <circle cx="20" cy="21" r="1"/>
+                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Add to Order
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))
             ) : (
@@ -979,6 +1199,13 @@ const CustomerDashboard = () => {
           isOpen={isCartOpen}
           onClose={() => setIsCartOpen(false)}
         />
+
+{isHistoryOpen && (
+  <History 
+    isOpen={isHistoryOpen} 
+    onClose={() => setIsHistoryOpen(false)} 
+  />
+)}
       </div>
     </>
   );
