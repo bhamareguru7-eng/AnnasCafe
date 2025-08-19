@@ -326,7 +326,13 @@ const CustomerDashboard = () => {
           max-width: 400px;
           width: 100%;
         }
-        
+        .search-cart-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 1rem; /* space between search and cart */
+          justify-content: flex-end;
+          flex: 1;
+}
         .search-bar {
           width: 100%;
           padding: 0.875rem 1rem 0.875rem 3rem;
@@ -674,39 +680,42 @@ const CustomerDashboard = () => {
               <p className="subtitle">Exceptional cuisine, unforgettable moments</p>
             </div>
             
-            <div className="search-container">
-              <div className="search-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.35-4.35"/>
-                </svg>
-              </div>
-              <input
-                type="text"
-                className="search-bar"
-                placeholder="Search our exquisite menu..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            
-            <button 
-              className="cart-button"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
-              </svg>
-              Your Order
-              {cart.length > 0 && (
-                <span className="cart-badge">
-                  {cart.reduce((sum, item) => sum + item.quantity, 0)}
-                </span>
-              )}
-            </button>
-          </div>
+            <div className="search-cart-wrapper">
+  <div className="search-container">
+    <div className="search-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
+    <input
+      type="text"
+      className="search-bar"
+      placeholder="Search our exquisite menu..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
+
+  <button 
+    className="cart-button"
+    onClick={() => setIsCartOpen(true)}
+  >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    Your Order
+    {cart.length > 0 && (
+      <span className="cart-badge">
+        {cart.reduce((sum, item) => sum + item.quantity, 0)}
+      </span>
+    )}
+  </button>
+</div>
+</div>
+
         </header>
 
         <main className="main-content">
