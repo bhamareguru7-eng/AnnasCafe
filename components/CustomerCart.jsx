@@ -1,8 +1,9 @@
 "use client"
 
 import { supabase } from '@/lib/supabase';
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import analysis from './analysis/analysis';
+import { useEffect } from 'react';
 
 const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose, onClearCart }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -11,9 +12,27 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tableNo, setTableNo] = useState('');
   const [tableError, setTableError] = useState('');
+  const [userId,setUserId] = useState(null);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  useEffect(() => {
+    const getOrCreateUserId = () => {
+      let id = localStorage.getItem('user_id');
+      
+      if (!id) {
+       
+        id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('user_id', id);
+      }
+      
+      setUserId(id);
+    };
+
+    getOrCreateUserId();
+  }, []);
+
 
   const handlePlaceOrder = () => {
     if (cartItems.length === 0) return;
@@ -37,7 +56,8 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
         .from('orders')
         .insert({ 
           iteminfo: JSON.stringify(cartItems),
-          tableno: tableNo
+          tableno: tableNo,
+          user_id:userId
         });
       
       if (error) throw error;
