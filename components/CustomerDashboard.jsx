@@ -21,6 +21,7 @@ const CustomerDashboard = () => {
         const { data, error: supabaseError } = await supabase
           .from('menu')
           .select('*')
+          .eq("Visibility",true)
           .order('id', { ascending: true });
 
         if (supabaseError) {
