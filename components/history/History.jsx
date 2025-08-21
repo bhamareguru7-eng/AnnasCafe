@@ -7,30 +7,31 @@ const History = ({ isOpen, onClose }) => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingOrderId, setDeletingOrderId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     if (isOpen) {
-      fetchOrderHistory();
+      // Get user ID from localStorage when component opens
+      const id = localStorage.getItem('annas_user_id');
+      setUserId(id);
+      
+      if (id) {
+        fetchOrderHistory(id);
+      } else {
+        console.log('No user ID found in localStorage');
+        setLoading(false);
+      }
     }
   }, [isOpen]);
 
-  const fetchOrderHistory = async () => {
+  const fetchOrderHistory = async (id) => {
     try {
       setLoading(true);
-      // Get user ID from localStorage
-      const userId = localStorage.getItem('annas_user_id');
-      
-      if (!userId) {
-        console.log('No user ID found');
-        setOrderHistory([]);
-        setLoading(false);
-        return;
-      }
       
       const { data, error } = await supabase
         .from('orders')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -358,6 +359,16 @@ const History = ({ isOpen, onClose }) => {
           padding-top: 1rem;
           border-top: 1px dashed #c4ad8f;
         }
+        
+        .debug-info {
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 4px;
+          margin-top: 1rem;
+          font-family: monospace;
+          font-size: 0.8rem;
+          color: #6c757d;
+        }
       `}</style>
 
       <div className="history-modal" onClick={onClose}>
@@ -380,6 +391,17 @@ const History = ({ isOpen, onClose }) => {
           </div>
 
           <div className="history-content">
+            {!userId && !loading && (
+              <div className="payment-message">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                User not authenticated. Please log in again.
+              </div>
+            )}
+            
             {loading ? (
               <div className="loading-spinner">
                 <div className="spinner"></div>
@@ -391,7 +413,9 @@ const History = ({ isOpen, onClose }) => {
                   <path d="M7 16l5-5 5 5"/>
                   <path d="M12 7v8"/>
                 </svg>
-                <p className="empty-history-text">No order history found</p>
+                <p className="empty-history-text">
+                  {userId ? 'No order history found' : 'User not authenticated'}
+                </p>
               </div>
             ) : (
               <div className="order-list">

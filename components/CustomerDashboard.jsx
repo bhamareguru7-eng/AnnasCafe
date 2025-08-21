@@ -14,8 +14,6 @@ const CustomerDashboard = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [orderHistory, setOrderHistory] = useState([]);
-
   useEffect(() => {
     const fetchMenu = async () => {
       try {
@@ -75,30 +73,6 @@ const CustomerDashboard = () => {
     setCart([]);
   };
 
-  const fetchOrderHistory = async () => {
-    try {
-      // Get user ID from localStorage
-      const userId = localStorage.getItem('user_id');
-      
-      if (!userId) {
-        console.log('No user ID found');
-        return;
-      }
-      
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      
-      setOrderHistory(data || []);
-      setIsHistoryOpen(true);
-    } catch (err) {
-      console.error('Error fetching order history:', err);
-    }
-  };
 
   const categories = ['All', ...new Set(menu.map(item => item.category))];
   
@@ -1317,7 +1291,9 @@ const CustomerDashboard = () => {
               <div className="button-group">
                 <button 
                   className="history-button"
-                  onClick={fetchOrderHistory}
+                  onClick={()=>{
+                    setIsHistoryOpen(true);
+                  }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 3v18h18"/>
