@@ -39,6 +39,12 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
   };
 
   const handleTableSubmit = () => {
+
+
+    if(Number(tableNo)<1 || Number(tableNo>14)){
+      return;
+    }
+
     if (!tableNo || tableNo.trim() === '') {
       setTableError('Please enter a table number');
       return;
@@ -794,7 +800,7 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
             <input
               type="number"
               className="table-input-field"
-              placeholder="Table number"
+              placeholder="Table number(1-14)"
               value={tableNo}
               min={1}
               max={14}
