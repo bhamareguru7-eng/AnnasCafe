@@ -796,6 +796,8 @@ const CartModal = ({ cartItems, onUpdateQuantity, onRemoveItem, isOpen, onClose,
               className="table-input-field"
               placeholder="Table number"
               value={tableNo}
+              min={1}
+              max={14}
               onChange={(e) => setTableNo(e.target.value)}
               autoFocus
             />
